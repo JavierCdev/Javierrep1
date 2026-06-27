@@ -109,15 +109,33 @@ h1{
 }
 
 /* ACTIONS */
+/* ACTIONS */
+
+.actions-container{
+    max-height:230px;
+    overflow-y:auto;
+    padding:6px;
+    margin-bottom:8px;
+}
+
 .actions-grid{
     display:grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:4px;
 }
 
 .actions-grid .small-option{
-    font-size:11px;
+    font-size:10px;
     padding:4px;
+    min-height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+
+    text-align:left;
+
+    background:#f1f5f9;
     border-radius:6px;
 }
 
@@ -172,7 +190,7 @@ textarea{
 
 <div class="container">
 
-<h1>📝 Generador de Notas</h1>
+<h1>📝 Note taker 2026</h1>
 
 <!-- CALLER / MEMBER -->
 <div class="section-title">👤 Type of Interaction</div>
@@ -241,24 +259,250 @@ Member
 <div class="section-title small-title">Gaps in Care</div>
 <div class="first-time">
 
-<label class="small-option"><input type="radio" name="gaps" value="Member will schedule appointment" onchange="generate()"> Schedule</label>
+<label class="small-option"><input type="radio" name="gaps" value="Member will schedule his own appointment" onchange="generate()"> Schedule</label>
 <label class="small-option"><input type="radio" name="gaps" value="Intent cancelled" onchange="generate()"> Cancelled</label>
-<label class="small-option"><input type="radio" name="gaps" value="Not mentioned" onchange="generate()"> Not mentioned</label>
+<label class="small-option"><input type="radio" name="gaps" value="Not mentioned due to the intent was not auto populated" onchange="generate()"> Not mentioned</label>
 
 </div>
 
 <!-- ACTIONS -->
-<div class="section-title small-title">Actions</div>
+<!-- ACTIONS -->
+
+<div class="section-title small-title">
+Actions
+</div>
+
+<div class="actions-container">
 
 <div class="actions-grid">
 
-<label class="small-option"><input type="checkbox" name="actions" value="B&E" onchange="generate()"> B&E</label>
-<label class="small-option"><input type="checkbox" name="actions" value="Material Request" onchange="generate()"> Material Request</label>
-<label class="small-option"><input type="checkbox" name="actions" value="LVS" onchange="generate()"> LVS</label>
-<label class="small-option"><input type="checkbox" name="actions" value="Update Demographics" onchange="generate()"> Demographics</label>
-<label class="small-option"><input type="checkbox" name="actions" value="Update Preferences" onchange="generate()"> Preferences</label>
-<label class="small-option"><input type="checkbox" name="actions" value="Hot Topics" onchange="generate()"> Hot Topics</label>
-<label class="small-option"><input type="checkbox" name="actions" value="Issues" onchange="generate()"> Issues</label>
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Hot Topics/FAQ intent was opened to"
+onchange="generate()">
+Hot Topics/FAQ
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Issues intent was opened to"
+onchange="generate()">
+Issues
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Language Services intent was opened to"
+onchange="generate()">
+Language Services
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Log View Status intent was opened to"
+onchange="generate()">
+Log View Status
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Material Request intent was opened to"
+onchange="generate()">
+Material Request
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Missed Transportation intent was opened to"
+onchange="generate()">
+Missed Transportation
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="New Member Process intent was opened to"
+onchange="generate()">
+New Member Process
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Provider Search Inquiry intent was opened to"
+onchange="generate()">
+Provider Search Inquiry
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Reinstate Plan intent was opened to"
+onchange="generate()">
+Reinstate Plan
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Schedule Activity intent was opened to"
+onchange="generate()">
+Schedule Activity
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Notification of Death intent was opened to"
+onchange="generate()">
+Notification of Death
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Out of Area Notification intent was opened to"
+onchange="generate()">
+Out of Area Notification
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Update Member Demographics intent was opened to"
+onchange="generate()">
+Update Member Demographics
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Update Member Preferences intent was opened to"
+onchange="generate()">
+Update Member Preferences
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Update PCP intent was opened to"
+onchange="generate()">
+Update PCP
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Accumulator Inquiry intent was opened to"
+onchange="generate()">
+Accumulator Inquiry
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="B&E intent was opened to get the plan information, read the disclaimers and assist the member.
+
+Disclaimers were read:"
+onchange="generate()">
+B&E
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Care Management intent was opened to"
+onchange="generate()">
+Care Management
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Claims Inquiry intent was opened to"
+onchange="generate()">
+Claims Inquiry
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Coordination of Benefits intent was opened to"
+onchange="generate()">
+Coordination of Benefits
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Gaps in Care intent was opened to"
+onchange="generate()">
+Gaps in Care
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Low Income Subsidy intent was opened to"
+onchange="generate()">
+Low Income Subsidy
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Medical Authorization Inquiry intent was opened to"
+onchange="generate()">
+Medical Authorization Inquiry
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Pharmacy Authorization Inquiry intent was opened to"
+onchange="generate()">
+Pharmacy Authorization Inquiry
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Return Mail intent was opened to"
+onchange="generate()">
+Return Mail
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Billing Inquiry and Payments intent was opened to"
+onchange="generate()">
+Billing Inquiry and Payments
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Cancellation or Disenrollment intent was opened to"
+onchange="generate()">
+Cancellation or Disenrollment
+</label>
+
+
+<label class="small-option">
+<input type="checkbox" name="actions"
+value="Change Plan Inquiry intent was opened to"
+onchange="generate()">
+Change Plan Inquiry
+</label>
+
+</div>
 
 </div>
 
@@ -314,20 +558,20 @@ function generate(){
     let caller = document.getElementById("caller").checked;
     let member = document.getElementById("member").checked;
 
-    if(caller) text += "Caller active.\n";
-    if(member) text += "Member active.\n";
+    if(caller) text += "Caller is calling us due to.\n";
+    if(member) text += "Member is calling us due to.\n";
 
     let hipaa = [...document.querySelectorAll(".hipaa input:checked")].map(i => i.value);
-    if(hipaa.length) text += "HIPAA: " + hipaa.join(", ") + ".\n";
+    if(hipaa.length) text += "HIPAA Verifiers: " + hipaa.join(", ") + ".\n";
 
     let firstTime = document.querySelector('input[name="firstTime"]:checked');
-    if(firstTime) text += "First time: " + firstTime.value + ".\n";
+    if(firstTime) text += "It's the first time calling us about this matter?: " + firstTime.value + ".\n";
 
     let personal = document.querySelector('input[name="personalChange"]:checked');
-    if(personal) text += "Personal change: " + personal.value + ".\n";
+    if(personal) text += "Has any of your personal information change recently?: " + personal.value + ".\n";
 
     let contact = document.querySelector('input[name="contactValid"]:checked');
-    if(contact) text += "Contact valid: " + contact.value + ".\n";
+    if(contact) text += "Is the Email and Phone Number still valid?: " + contact.value + ".\n";
 
     let website = document.querySelector('input[name="website"]:checked');
     if(website) text += "Website: " + website.value + ".\n";
@@ -335,8 +579,23 @@ function generate(){
     let gaps = document.querySelector('input[name="gaps"]:checked');
     if(gaps) text += "Gaps: " + gaps.value + ".\n";
 
-    let actions = [...document.querySelectorAll('input[name="actions"]:checked')].map(i => i.value);
-    if(actions.length) text += "Actions: " + actions.join(", ") + ".\n";
+  let actions = [...document.querySelectorAll('input[name="actions"]:checked')]
+.map(i => i.value);
+
+
+// Buscar el elemento que empieza con B&E
+const be = actions.find(a => a.startsWith("B&E"));
+
+if(be){
+
+    actions = actions.filter(a => !a.startsWith("B&E"));
+
+    actions.unshift(be);
+
+}
+
+if(actions.length)
+    text += "Actions: " + actions.join(", ") + ".\n";
 
     let callerName = document.querySelector('input[name="callerName"]:checked');
     if(callerName) text += "Caller Name: " + callerName.value + ".\n";
