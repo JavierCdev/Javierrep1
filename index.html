@@ -87,14 +87,47 @@ h1{
 }
 
 /* HIPAA */
+.hipaa{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+}
+
 .hipaa label{
-    display:block;
-    padding:8px;
-    margin-bottom:6px;
-    background:#f1f5f9;
-    border-radius:8px;
-    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:8px 10px;
+
+    background:#f8fafc;
+    border:1px solid #dbeafe;
+    border-radius:10px;
+
     font-size:13px;
+    font-weight:500;
+    line-height:1.2;
+
+    cursor:pointer;
+    transition:.2s;
+}
+
+.hipaa label:hover{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.hipaa label:has(input:checked){
+    background:#dbeafe;
+    border-color:#2563eb;
+}
+
+.hipaa label:last-child{
+    grid-column:1 / span 2;
+}
+
+.hipaa input{
+    flex-shrink:0;
 }
 
 /* SYMPTOMS */
@@ -109,7 +142,6 @@ h1{
 }
 
 /* ACTIONS */
-/* ACTIONS */
 
 .actions-container{
     max-height:230px;
@@ -120,7 +152,7 @@ h1{
 
 .actions-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(2,1fr);
     gap:4px;
 }
 
@@ -128,17 +160,42 @@ h1{
     font-size:10px;
     padding:4px;
     min-height:42px;
-
     display:flex;
     align-items:center;
     justify-content:flex-start;
-
     text-align:left;
-
     background:#f1f5f9;
     border-radius:6px;
 }
+/* INPUTS DE TEXTO */
 
+.text-input{
+
+    width:100%;
+    box-sizing:border-box;
+    margin-top:6px;
+    margin-bottom:8px;
+    padding:10px 12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    background:#f8fafc;
+    font-size:13px;
+    outline:none;
+    transition:.2s;
+
+}
+
+.text-input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+    background:white;
+
+}
+
+.text-input::placeholder{
+    color:#94a3b8;
+
+}
 /* TEXTAREA */
 textarea{
     width:100%;
@@ -165,6 +222,18 @@ textarea{
 
 .copy:hover{
     background:#059669;
+}
+
+.gaps-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.gaps-grid .small-option{
+    justify-content:center;
+    text-align:center;
 }
 
 /* 🔥 TOAST POPUP */
@@ -198,12 +267,12 @@ textarea{
 <div class="roles">
 
 <label>
-<input type="checkbox" id="caller" onchange="generate()">
+<input type="radio" name="interactionType" id="caller" onchange="generate()">
 Caller
 </label>
 
 <label>
-<input type="checkbox" id="member" onchange="generate()">
+<input type="radio" name="interactionType" id="member" onchange="generate()">
 Member
 </label>
 
@@ -214,14 +283,14 @@ Member
 
 <div class="hipaa">
 
-<label><input type="checkbox" value="MID & DOB" onchange="generate()"> MID & DOB</label>
-<label><input type="checkbox" value="DOB, Address and Phone Number" onchange="generate()"> DOB, Address and Phone Number</label>
-<label><input type="checkbox" value="IVR Verified with MID and DOB" onchange="generate()"> IVR Verified with MID and DOB</label>
+<label><input type="radio" name="hipaa" value="MID & DOB" onchange="generate()">MID & DOB</label>
+<label><input type="radio" name="hipaa" value="DOB, Address and Phone Number" onchange="generate()">DOB, Address & PN</label>
+<label><input type="radio" name="hipaa" value="IVR Verified with MID and DOB" onchange="generate()">IVR Verified with MID and DOB</label>
 
 </div>
 
 <!-- FIRST TIME -->
-<div class="section-title small-title">First time calling?</div>
+<div class="section-title small-title">It is the first time you are calling for this matter?</div>
 <div class="first-time">
 
 <label class="small-option"><input type="radio" name="firstTime" value="Yes" onchange="generate()"> Yes</label>
@@ -230,7 +299,7 @@ Member
 </div>
 
 <!-- PERSONAL -->
-<div class="section-title small-title">Personal Info Changed</div>
+<div class="section-title small-title">Has any of your personal Information Changed recently?</div>
 <div class="first-time">
 
 <label class="small-option"><input type="radio" name="personalChange" value="Yes" onchange="generate()"> Yes</label>
@@ -239,7 +308,7 @@ Member
 </div>
 
 <!-- CONTACT -->
-<div class="section-title small-title">Contact Valid</div>
+<div class="section-title small-title">Is the Email and Pnone Number still Valid?</div>
 <div class="first-time">
 
 <label class="small-option"><input type="radio" name="contactValid" value="Yes" onchange="generate()"> Yes</label>
@@ -252,16 +321,21 @@ Member
 <div class="first-time">
 
 <label class="small-option"><input type="radio" name="website" value="Mentioned" onchange="generate()"> Mentioned</label>
-
+<label class="small-option"><input type="radio" name="website" value="Skipped" onchange="generate()"> Skipped</label>
 </div>
 
 <!-- GAPS -->
 <div class="section-title small-title">Gaps in Care</div>
-<div class="first-time">
+<div class="gaps-grid">
 
-<label class="small-option"><input type="radio" name="gaps" value="Member will schedule his own appointment" onchange="generate()"> Schedule</label>
-<label class="small-option"><input type="radio" name="gaps" value="Intent cancelled" onchange="generate()"> Cancelled</label>
-<label class="small-option"><input type="radio" name="gaps" value="Not mentioned due to the intent was not auto populated" onchange="generate()"> Not mentioned</label>
+<label class="small-option">
+<input type="radio" name="gaps" value="Member will schedule his own appointment" onchange="generate()">M/Scheduled</label>
+<label class="small-option">
+<input type="radio" name="gaps" value="Agent scheduled the member appointment" onchange="generate()">A/Scheduled</label>
+<label class="small-option">
+<input type="radio" name="gaps" value="Intent cancelled" onchange="generate()">Cancelled</label>
+<label class="small-option">
+<input type="radio" name="gaps" value="Not mentioned due to the intent was not auto populated" onchange="generate()">Not mentioned</label>
 
 </div>
 
@@ -409,7 +483,9 @@ Accumulator Inquiry
 <input type="checkbox" name="actions"
 value="B&E intent was opened to get the plan information, read the disclaimers and assist the member.
 
-Disclaimers were read:"
+Disclaimers were read:
+
+"
 onchange="generate()">
 B&E
 </label>
@@ -508,16 +584,22 @@ Change Plan Inquiry
 
 <!-- CALLER NAME -->
 <div class="section-title small-title">Caller Name</div>
-<div class="first-time">
-<label class="small-option"><input type="checkbox" name="callerName" value="Caller Name" onchange="generate()"> Caller Name</label>
-</div>
+
+<input
+type="text"
+id="callerNameInput"
+class="text-input"
+placeholder="Enter caller name"
+oninput="generate()">
 
 <!-- INTERACTION ID -->
 <div class="section-title small-title">Interaction ID</div>
+
 <div class="first-time">
 
-<label class="small-option"><input type="checkbox" name="interactionId" value="Interaction ID" onchange="generate()"> Interaction ID</label>
-<label class="small-option"><input type="checkbox" name="interactionId" value="Met Interaction ID" onchange="generate()"> Met Interaction ID</label>
+<input type="text"id="interactionInput"class="text-input"placeholder="Interaction ID"oninput="generate()">
+
+<input type="text"id="metInteractionInput"class="text-input"placeholder="Met Interaction ID"oninput="generate()">
 
 </div>
 
@@ -525,29 +607,30 @@ Change Plan Inquiry
 <div class="section-title small-title">In Home Assessment</div>
 <div class="first-time">
 
-<label class="small-option"><input type="checkbox" name="inHome" value="Mentioned" onchange="generate()"> Mentioned</label>
-<label class="small-option"><input type="checkbox" name="inHome" value="Not relevant" onchange="generate()"> Not relevant</label>
+<label class="small-option">
+<input type="radio" name="inHome" value="Mentioned" onchange="generate()">Mentioned</label>
+<label class="small-option"><input type="radio" name="inHome" value="Not relevant" onchange="generate()">Not relevant</label>
 
 </div>
 
 <!-- RESOLUTION -->
-<div class="section-title small-title">Resolution</div>
+ <div class="section-title small-title">Resolution</div>
 <div class="first-time">
 
-<label class="small-option"><input type="checkbox" name="resolution" value="Caller educated" onchange="generate()"> Caller</label>
-<label class="small-option"><input type="checkbox" name="resolution" value="Member educated" onchange="generate()"> Member</label>
+<label class="small-option"><input type="radio" name="resolution" value="Caller educated" onchange="generate()">Caller</label>
+<label class="small-option"><input type="radio" name="resolution" value="Member educated" onchange="generate()">Member</label>
 
 </div>
 
 <!-- OUTPUT -->
 <textarea id="nota"></textarea>
 
-<button class="copy" onclick="copiar()">📋 Copiar Nota</button>
+<button class="copy" onclick="copiar()">📋 Copy Note</button>
 
 </div>
 
 <!-- TOAST -->
-<div id="toast">📋 Nota copiada</div>
+<div id="toast">📋 Copied</div>
 
 <script>
 
@@ -561,8 +644,8 @@ function generate(){
     if(caller) text += "Caller is calling us due to.\n";
     if(member) text += "Member is calling us due to.\n";
 
-    let hipaa = [...document.querySelectorAll(".hipaa input:checked")].map(i => i.value);
-    if(hipaa.length) text += "HIPAA Verifiers: " + hipaa.join(", ") + ".\n";
+    let hipaa = document.querySelector('input[name="hipaa"]:checked');
+    if(hipaa)text += "HIPAA Verifiers: " + hipaa.value + ".\n";
 
     let firstTime = document.querySelector('input[name="firstTime"]:checked');
     if(firstTime) text += "It's the first time calling us about this matter?: " + firstTime.value + ".\n";
@@ -597,14 +680,35 @@ if(be){
 if(actions.length)
     text += "Actions: " + actions.join(", ") + ".\n";
 
-    let callerName = document.querySelector('input[name="callerName"]:checked');
-    if(callerName) text += "Caller Name: " + callerName.value + ".\n";
+const callerName = document
+    .getElementById("callerNameInput")
+    .value
+    .trim();
 
-    let interactionId = [...document.querySelectorAll('input[name="interactionId"]:checked')].map(i => i.value);
-    if(interactionId.length) text += "Interaction ID: " + interactionId.join(", ") + ".\n";
+if(callerName !== ""){
+    text += "Caller Name: " + callerName + "\n";
+}
+
+    const interactionId = document
+    .getElementById("interactionInput")
+    .value
+    .trim();
+
+if(interactionId !== ""){
+    text += "Interaction ID: " + interactionId + "\n";
+}
+
+const metInteractionId = document
+    .getElementById("metInteractionInput")
+    .value
+    .trim();
+
+if(metInteractionId !== ""){
+    text += "Met Interaction ID: " + metInteractionId + "\n";
+}
 
     let inHome = [...document.querySelectorAll('input[name="inHome"]:checked')].map(i => i.value);
-    if(inHome.length) text += "In Home: " + inHome.join(", ") + ".\n";
+    if(inHome.length) text += "In Home Assessment: " + inHome.join(", ") + ".\n";
 
     let resolution = [...document.querySelectorAll('input[name="resolution"]:checked')].map(i => i.value);
     if(resolution.length) text += "Resolution: " + resolution.join(", ") + ".\n";
