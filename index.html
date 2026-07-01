@@ -157,13 +157,13 @@ h1{
 }
 
 .actions-grid .small-option{
-    font-size:10px;
+    font-size:12px;
     padding:4px;
     min-height:42px;
     display:flex;
     align-items:center;
-    justify-content:flex-start;
-    text-align:left;
+    justify-content:center;
+    text-align:center;
     background:#f1f5f9;
     border-radius:6px;
 }
@@ -205,6 +205,7 @@ textarea{
     border-radius:8px;
     border:1px solid #cbd5e1;
     font-size:12px;
+    box-sizing:border-box;
 }
 
 /* BUTTON */
@@ -236,6 +237,120 @@ textarea{
     text-align:center;
 }
 
+.selected-action{
+
+    background:#2563eb !important;
+
+    color:white;
+
+}
+
+.selected-chip{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:10px 14px;
+
+    border-radius:8px;
+
+    margin-bottom:8px;
+
+    font-size:13px;
+
+}
+
+.remove-action{
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    transition:.2s;
+
+}
+
+.remove-action:hover{
+
+    color:#ffb4b4;
+
+}
+
+.selected-chip{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#2563eb;
+    color:white;
+    padding:10px 14px;
+    border-radius:8px;
+    margin-bottom:8px;
+    font-size:13px;
+}
+
+.remove-action{
+    cursor:pointer;
+    font-weight:bold;
+}
+.remove-action:hover{
+    color:#ffd4d4;
+}
+
+.empty-actions{
+
+    grid-column:1 / -1;
+
+    width:100%;
+
+    text-align:center;
+
+    padding:16px 8px;
+
+}
+
+.empty-title{
+    font-size:14px;
+    font-weight:600;
+    color:#64748b;
+}
+
+.empty-subtitle{
+    font-size:12px;
+    color:#94a3b8;
+}
+
+.search-results{
+    display:none;
+    margin-top:6px;
+    margin-bottom:10px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    background:white;
+    overflow:hidden;
+}
+
+.search-item{
+    padding:10px 12px;
+    cursor:pointer;
+    font-size:13px;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.search-item:last-child{
+    border-bottom:none;
+}
+
+.search-item:hover{
+    background:#eff6ff;
+}
+
 /* 🔥 TOAST POPUP */
 #toast{
     position:fixed;
@@ -251,6 +366,127 @@ textarea{
     pointer-events:none;
     transition:0.3s ease;
 }
+#selectedActions{
+    max-height:220px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    padding-right:4px;
+
+}
+.action-detail-card{
+    background:#f8fafc;
+    border:1px solid #dbeafe;
+    border-radius:10px;
+    padding:7px;
+    margin-bottom:8px;
+
+}
+
+.action-detail-title{
+
+    font-weight:600;
+    color:#334155;
+    margin-bottom:8px;
+    font-size:15px;
+    font-weight:600;
+    padding:4px 0;
+}
+.detail-label{
+    display:block;
+    color:#334155;
+    font-size:12px;
+    font-weight:500;
+    margin-top:10px;
+    margin-bottom:4px;
+}
+
+.detail-textarea{
+    width:100%;
+    min-height:48px;
+    max-height:90px;
+    padding:8px 10px;
+    font-size:13px;
+    resize:vertical;
+}
+.detail-textarea.small{
+    min-height:42px;
+    max-height:42px;
+}
+
+.detail-textarea.medium{
+    min-height:90px;
+    max-height:90px;
+}
+
+.detail-textarea.large{
+    min-height:130px;
+    max-height:130px;
+}
+
+.detail-radio-group{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    margin-top:6px;
+}
+.detail-radio-group input[type="radio"]{
+    transform:scale(.75);
+    margin-right:4px;
+}
+.detail-radio-group label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 10px;
+    background:#f8fafc;
+    border:1px solid #dbeafe;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.2s;
+}
+.detail-radio-group label:hover{
+    background:#eff6ff;
+}
+.detail-radio-group label:has(input:checked){
+    background:#dbeafe;
+    border-color:#2563eb;
+}
+.reset-btn{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#f59e0b;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.reset-btn:hover{
+
+    background:#d97706;
+
+}
+
 
 </style>
 </head>
@@ -277,6 +513,17 @@ Member
 </label>
 
 </div>
+
+<div class="section-title small-title">
+    Reason for Call
+</div>
+
+<textarea
+    id="reasonForCall"
+    class="text-input"
+    rows="3"
+    placeholder="Describe briefly why the caller/member contacted us..."
+    oninput="generate()"></textarea>
 
 <!-- HIPAA -->
 <div class="section-title">🔐 HIPAA Verifiers</div>
@@ -308,7 +555,7 @@ Member
 </div>
 
 <!-- CONTACT -->
-<div class="section-title small-title">Is the Email and Pnone Number still Valid?</div>
+<div class="section-title small-title">Is the Email and Phone Number still Valid?</div>
 <div class="first-time">
 
 <label class="small-option"><input type="radio" name="contactValid" value="Yes" onchange="generate()"> Yes</label>
@@ -324,22 +571,6 @@ Member
 <label class="small-option"><input type="radio" name="website" value="Skipped" onchange="generate()"> Skipped</label>
 </div>
 
-<!-- GAPS -->
-<div class="section-title small-title">Gaps in Care</div>
-<div class="gaps-grid">
-
-<label class="small-option">
-<input type="radio" name="gaps" value="Member will schedule his own appointment" onchange="generate()">M/Scheduled</label>
-<label class="small-option">
-<input type="radio" name="gaps" value="Agent scheduled the member appointment" onchange="generate()">A/Scheduled</label>
-<label class="small-option">
-<input type="radio" name="gaps" value="Intent cancelled" onchange="generate()">Cancelled</label>
-<label class="small-option">
-<input type="radio" name="gaps" value="Not mentioned due to the intent was not auto populated" onchange="generate()">Not mentioned</label>
-
-</div>
-
-<!-- ACTIONS -->
 <!-- ACTIONS -->
 
 <div class="section-title small-title">
@@ -348,237 +579,34 @@ Actions
 
 <div class="actions-container">
 
-<div class="actions-grid">
+    <input
+    type="text"
+    id="actionSearch"
+    class="text-input"
+    placeholder="🔍 Search action..."
+    oninput="searchActions()">
 
+    <div id="searchResults" class="search-results"></div>
 
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Hot Topics/FAQ intent was opened to"
-onchange="generate()">
-Hot Topics/FAQ
-</label>
+    <div class="actions-grid" id="favoriteActions">
 
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Issues intent was opened to"
-onchange="generate()">
-Issues
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Language Services intent was opened to"
-onchange="generate()">
-Language Services
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Log View Status intent was opened to"
-onchange="generate()">
-Log View Status
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Material Request intent was opened to"
-onchange="generate()">
-Material Request
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Missed Transportation intent was opened to"
-onchange="generate()">
-Missed Transportation
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="New Member Process intent was opened to"
-onchange="generate()">
-New Member Process
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Provider Search Inquiry intent was opened to"
-onchange="generate()">
-Provider Search Inquiry
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Reinstate Plan intent was opened to"
-onchange="generate()">
-Reinstate Plan
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Schedule Activity intent was opened to"
-onchange="generate()">
-Schedule Activity
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Notification of Death intent was opened to"
-onchange="generate()">
-Notification of Death
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Out of Area Notification intent was opened to"
-onchange="generate()">
-Out of Area Notification
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Update Member Demographics intent was opened to"
-onchange="generate()">
-Update Member Demographics
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Update Member Preferences intent was opened to"
-onchange="generate()">
-Update Member Preferences
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Update PCP intent was opened to"
-onchange="generate()">
-Update PCP
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Accumulator Inquiry intent was opened to"
-onchange="generate()">
-Accumulator Inquiry
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="B&E intent was opened to get the plan information, read the disclaimers and assist the member.
-
-Disclaimers were read:
-
-"
-onchange="generate()">
-B&E
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Care Management intent was opened to"
-onchange="generate()">
-Care Management
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Claims Inquiry intent was opened to"
-onchange="generate()">
-Claims Inquiry
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Coordination of Benefits intent was opened to"
-onchange="generate()">
-Coordination of Benefits
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Gaps in Care intent was opened to"
-onchange="generate()">
-Gaps in Care
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Low Income Subsidy intent was opened to"
-onchange="generate()">
-Low Income Subsidy
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Medical Authorization Inquiry intent was opened to"
-onchange="generate()">
-Medical Authorization Inquiry
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Pharmacy Authorization Inquiry intent was opened to"
-onchange="generate()">
-Pharmacy Authorization Inquiry
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Return Mail intent was opened to"
-onchange="generate()">
-Return Mail
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Billing Inquiry and Payments intent was opened to"
-onchange="generate()">
-Billing Inquiry and Payments
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Cancellation or Disenrollment intent was opened to"
-onchange="generate()">
-Cancellation or Disenrollment
-</label>
-
-
-<label class="small-option">
-<input type="checkbox" name="actions"
-value="Change Plan Inquiry intent was opened to"
-onchange="generate()">
-Change Plan Inquiry
-</label>
+    </div>
 
 </div>
+
+<div class="section-title small-title">
+    Selected Actions
+</div>
+
+<div class="actions-grid" id="selectedActions">
+
+</div>
+
+<div class="section-title small-title">
+    Action Details
+</div>
+
+<div id="actionDetails">
 
 </div>
 
@@ -614,18 +642,59 @@ oninput="generate()">
 </div>
 
 <!-- RESOLUTION -->
- <div class="section-title small-title">Resolution</div>
+<div class="section-title small-title">Resolution</div>
+
 <div class="first-time">
 
-<label class="small-option"><input type="radio" name="resolution" value="Caller educated" onchange="generate()">Caller</label>
-<label class="small-option"><input type="radio" name="resolution" value="Member educated" onchange="generate()">Member</label>
+<label class="small-option">
+<input
+    type="radio"
+    name="resolution"
+    value="Caller was educated about"
+    onchange="
+    document.getElementById('resolutionContainer').style.display='block';
+    generate();
+">
+Caller
+</label>
+
+<label class="small-option">
+<input
+    type="radio"
+    name="resolution"
+    value="Member was educated about"
+    onchange="
+    document.getElementById('resolutionContainer').style.display='block';
+    generate();
+">
+Member
+</label>
+
+</div>
+
+<div id="resolutionContainer" style="display:none;">
+
+    <div class="section-title small-title">
+        Resolution Details
+    </div>
+
+    <textarea
+        id="resolutionNotes"
+        class="text-input"
+        rows="2"
+        placeholder="Describe the resolution..."
+        oninput="generate()"></textarea>
 
 </div>
 
 <!-- OUTPUT -->
-<textarea id="nota"></textarea>
+<textarea id="nota" readonly></textarea>
 
 <button class="copy" onclick="copiar()">📋 Copy Note</button>
+
+<button class="reset-btn" onclick="resetForm()">
+    🔄 Reset Form
+</button>
 
 </div>
 
@@ -634,6 +703,1627 @@ oninput="generate()">
 
 <script>
 
+const actions = [
+
+/* =====================================
+       GENERAL
+===================================== */
+{
+    id:"hottopics",
+    icon:"🔥",
+
+    name:"Hot Topics/FAQ",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:["Hot","Topics","FAQ","Top",],
+
+    note:`
+Hot Topics/FAQ intent was opened to assist the caller with
+`,
+
+fields:[
+
+        {
+            id:"hot_topics_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"Issues",
+    icon:"⚠️",
+
+    name:"Issues",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:["Issues","Iss","Grievances","Griev"],
+
+    note:`
+Issues intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"issues_reason",
+            label:"Reason",
+            type:"radio",
+
+            appendToNote:true,
+
+            options:[
+                "Grievance",
+                "Appeal",
+                "Other"
+            ]
+        },
+
+        {
+            id:"issues_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+
+},
+
+{
+    id:"languageServices",
+    icon:"🌐",
+
+    name:"Language Services",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "Language",
+        "Interpreter",
+        "Translation",
+        "Language Services",
+        "LS"
+    ],
+
+    note:`
+Language Services intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"language_service",
+            label:"Service Requested",
+            type:"radio",
+
+            options:[
+                "Cancel a Previously Scheduled Interpreter Appointment",
+                "Obtain an Interpreter for this Call",
+                "Schedule an Interpreter Appointment"
+            ]
+        },
+
+        {
+            id:"language_cancel_reason",
+            label:"Cancellation Reason",
+            type:"textarea",
+            size:"medium",
+            showWhen:"Cancel a Previously Scheduled Interpreter Appointment"
+        },
+
+        {
+            id:"language_requested",
+            label:"Language Requested",
+            type:"textarea",
+            size:"small",
+            showWhen:"Obtain an Interpreter for this Call"
+        },
+
+        {
+            id:"language_schedule_language",
+            label:"Language Requested",
+            type:"textarea",
+            size:"small",
+            showWhen:"Schedule an Interpreter Appointment"
+        },
+
+        {
+            id:"language_schedule_address",
+            label:"Address",
+            type:"textarea",
+            size:"small",
+            showWhen:"Schedule an Interpreter Appointment"
+        },
+
+        {
+            id:"language_schedule_date",
+            label:"Appointment Date",
+            type:"textarea",
+            size:"xsmall",
+            showWhen:"Schedule an Interpreter Appointment"
+        }
+
+    ]
+},
+
+{
+    id:"lvs",
+    icon:"📋",
+
+    name:"Log View Status",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "lvs",
+        "log",
+        "log view",
+        "view"
+    ],
+
+    note:`
+Log View Status intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"lvs_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"material",
+    icon:"📄",
+    name:"Material Request",
+    favorite:true,
+    keywords:["material","phi","mid", "form"],
+    note:"Material Request intent was opened to assist the caller requesting the materials.",
+
+    fields:[
+
+        {
+            id:"materialRequested",
+            label:"Material Requested",
+            type:"textarea"
+        },
+
+        {
+            id:"addressVerified",
+            label:"Address Verified",
+            type:"radio",
+            options:[
+                "Yes",
+                "No"
+            ]
+        }
+
+    ]
+},
+
+{
+    id:"transportation",
+    icon:"🚌",
+
+    name:"Missed Transportation",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "Missed",
+        "Transportation",
+        "Transport",
+        "Ride"
+    ],
+
+    note:`
+Missed Transportation intent was opened to assist the caller.
+`,
+
+    fields:[
+
+        {
+            id:"transport_issue",
+            label:"Transportation Issue",
+            type:"select",
+
+            options:[
+                "No Show",
+                "Unable to Contact Transportation",
+                "Dropped at Wrong Address",
+                "Unable to Get Reimbursement",
+                "Other"
+            ]
+        },
+
+        {
+            id:"transport_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"newmemberprocess",
+    icon:"🆕",
+
+    name:"New Member Process",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "New",
+        "Process",
+        "Member",
+        "Proc"
+    ],
+
+    note:`
+New Member Process intent was opened to assist the caller.
+`,
+
+    fields:[
+
+        {
+            id:"new_member_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"providersearchinq",
+    icon:"🏥",
+
+    name:"Provider Search Inquiry",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "Provider",
+        "Search",
+        "Inquiry",
+        "Doctor",
+        "PCP"
+    ],
+
+    note:`
+Provider Search Inquiry intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"provider_address_reviewed",
+            label:"Address Reviewed",
+            type:"radio",
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"provider_results",
+            label:"Provider Search Results",
+            type:"textarea",
+            size:"large"
+        },
+
+        {
+            id:"provider_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"medium"
+        }
+
+    ]
+},
+
+{
+    id:"reinstateplan",
+    icon:"🔄",
+
+    name:"Reinstate Plan",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "Reinstate",
+        "Plan",
+        "Reinstatement",
+        "Reins"
+    ],
+
+    note:`
+Reinstate Plan intent was opened to assist the caller.
+`,
+
+    fields:[
+
+        {
+            id:"reinstate_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"scheduleactivity",
+    icon:"📅",
+
+    name:"Schedule Activity",
+
+    category:"General",
+
+    favorite:false,
+
+    keywords:[
+        "Schedule",
+        "Activity",
+        "Appointment",
+        "Schedule Activity",
+        "Act"
+    ],
+
+    note:`
+Schedule Activity intent was opened to assist the caller.
+`,
+
+    fields:[
+
+        {
+            id:"schedule_activity_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+/* =====================================
+       BILLING/POLICY
+===================================== */
+
+{
+    id:"billinginqandpay",
+    icon:"💳",
+
+    name:"Billing Inquiry & Payments",
+
+    category:"Billing/Policy",
+
+    favorite:false,
+
+    keywords:[
+        "Billing",
+        "Payment",
+        "Bill",
+        "Pay",
+        "Premium"
+    ],
+
+    note:`
+Billing Inquiry & Payments intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"billing_date",
+            label:"Payment Date",
+            type:"textarea",
+            size:"xsmall"
+        },
+
+        {
+            id:"billing_amount",
+            label:"Amount",
+            type:"textarea",
+            size:"xsmall"
+        },
+
+        {
+            id:"billing_confirmation",
+            label:"Confirmation Number",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"billing_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"cancellationdisenroll",
+    icon:"❌",
+
+    name:"Cancellation or Disenrollment",
+
+    category:"Billing/Policy",
+
+    favorite:false,
+
+    keywords:[
+        "Cancellation",
+        "Disenrollment",
+        "Cancel",
+        "Terminate"
+    ],
+
+    note:`
+Cancellation or Disenrollment intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"cancel_request_type",
+            label:"Request Type",
+            type:"radio",
+
+            appendToNote:true,
+
+            options:[
+                "Cancellation",
+                "Disenrollment"
+            ]
+        },
+
+        {
+            id:"cancel_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"changeplaninq",
+    icon:"🔄",
+
+    name:"Change Plan Inquiry",
+
+    category:"Billing/Policy",
+
+    favorite:false,
+
+    keywords:[
+        "Change",
+        "Plan",
+        "Change Plan"
+    ],
+
+    note:`
+Change Plan Inquiry intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"change_plan_request",
+            label:"Request",
+            type:"radio",
+
+            appendToNote:true,
+
+            options:[
+                "Change Plan Type",
+                "Effective Date Change Plan"
+            ]
+        },
+
+        {
+            id:"change_plan_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+/* =====================================
+       UPDATES
+===================================== */
+
+{
+    id:"notificationofdeath",
+    icon:"🕊️",
+
+    name:"Notification of Death",
+
+    category:"Updates",
+
+    favorite:false,
+
+    keywords:[
+        "Notification",
+        "Death",
+        "Deceased",
+        "Death Notification"
+    ],
+
+    note:`
+Notification of Death intent was opened to assist the caller.
+`,
+
+    fields:[
+
+        {
+            id:"date_of_death",
+            label:"Date of Death",
+            type:"textarea",
+            size:"xsmall"
+        },
+
+        {
+            id:"death_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"outofareanotif",
+    icon:"📍",
+
+    name:"Out of Area Notification",
+
+    category:"Updates",
+
+    favorite:false,
+
+    keywords:[
+        "Out",
+        "Area",
+        "Notification",
+        "Address",
+        "Move"
+    ],
+
+    note:`
+Out of Area Notification intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"out_area_address_type",
+            label:"Address Type",
+            type:"select",
+
+            options:[
+                "Home",
+                "Billing",
+                "Mailing",
+                "Other"
+            ]
+        },
+
+        {
+            id:"out_area_address",
+            label:"Address",
+            type:"textarea",
+            size:"medium"
+        },
+
+        {
+            id:"out_area_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"memberdemographics",
+    icon:"👤",
+
+    name:"Member Demographics",
+
+    category:"Updates",
+
+    favorite:false,
+
+    keywords:[
+        "Member",
+        "Demographics",
+        "Update",
+        "Phone",
+        "Address",
+        "DOB",
+        "Gender",
+        "Name",
+        "Authorized Contact"
+    ],
+
+    note:`
+Member Demographics intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"update_type",
+            label:"Update Type",
+            type:"select",
+
+            appendToNote:true,
+
+            options:[
+                "Address",
+                "Authorized Contacts",
+                "Date of Birth",
+                "Gender",
+                "Name",
+                "Phone Number"
+            ]
+        },
+
+        // =====================
+        // ADDRESS
+        // =====================
+
+        {
+            id:"member_address",
+            label:"Address",
+            type:"textarea",
+            size:"medium",
+
+            dependsOn:"update_type",
+            showWhen:"Address"
+        },
+
+        {
+            id:"member_address_effective",
+            label:"Effective Date",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Address"
+        },
+
+        // =====================
+        // AUTHORIZED CONTACTS
+        // =====================
+
+        {
+            id:"authorized_contact_name",
+            label:"First & Last Name",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Authorized Contacts"
+        },
+
+        {
+            id:"authorized_contact_start",
+            label:"Start Date",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Authorized Contacts"
+        },
+
+        {
+            id:"authorized_contact_end",
+            label:"End Date",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Authorized Contacts"
+        },
+
+        // =====================
+        // DATE OF BIRTH
+        // =====================
+
+        {
+            id:"member_dob",
+            label:"Date of Birth",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Date of Birth"
+        },
+
+        // =====================
+        // GENDER
+        // =====================
+
+        {
+            id:"member_gender",
+            label:"Gender",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Gender"
+        },
+
+        // =====================
+        // NAME
+        // =====================
+
+        {
+            id:"member_name",
+            label:"Member Name",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Name"
+        },
+
+        // =====================
+        // PHONE
+        // =====================
+
+        {
+            id:"member_phone",
+            label:"Phone Number",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"update_type",
+            showWhen:"Phone Number"
+        },
+
+        // =====================
+        // NOTES
+        // =====================
+
+        {
+            id:"member_demo_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"updatememberpreferences",
+    icon:"⚙️",
+
+    name:"Update Member Preferences",
+
+    category:"Updates",
+
+    favorite:false,
+
+    keywords:[
+        "Preferences",
+        "Language",
+        "Email",
+        "Race",
+        "Ethnicity",
+        "Pronoun",
+        "Format"
+    ],
+
+    note:`
+Update Member Preferences intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        // =====================
+        // UPDATE TYPE
+        // =====================
+
+        {
+            id:"preference_type",
+            label:"Update Type",
+            type:"select",
+
+            appendToNote:true,
+
+            options:[
+                "Alternate Format Preferences",
+                "Electronic Document Delivery Option",
+                "Email",
+                "Member Language",
+                "Member Engagement Management",
+                "Race or Ethnicity",
+                "Pronoun"
+            ]
+        },
+
+        // =====================
+        // ALTERNATE FORMAT
+        // =====================
+
+        {
+            id:"alternate_format",
+            label:"Alternate Format Preference",
+            type:"select",
+
+            dependsOn:"preference_type",
+            showWhen:"Alternate Format Preferences",
+
+            options:[
+                "Audio Interpreter/Tapes (PDF)",
+                "Audio Interpreter/Tapes (CD)",
+                "Audio Interpreter/Tapes (Web)",
+                "Audio/Oral Interpretation",
+                "Braille",
+                "Large Font",
+                "Audio Interpreter/Tapes",
+                "Telecommunications Device for the Deaf",
+                "Data CD"
+            ]
+        },
+
+        // =====================
+        // ELECTRONIC DOCUMENT DELIVERY
+        // =====================
+
+        {
+            id:"edd_option",
+            label:"Electronic Document Delivery",
+            type:"radio",
+
+            dependsOn:"preference_type",
+            showWhen:"Electronic Document Delivery Option",
+
+            options:[
+                "Email Opt In",
+                "Email Opt Out"
+            ]
+        },
+
+        // =====================
+        // EMAIL
+        // =====================
+
+        {
+            id:"member_email",
+            label:"Email Address",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"preference_type",
+            showWhen:"Email"
+        },
+
+        // =====================
+        // MEMBER LANGUAGE
+        // =====================
+
+        {
+            id:"member_language",
+            label:"Language",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"preference_type",
+            showWhen:"Member Language"
+        },
+
+        // =====================
+        // MEMBER ENGAGEMENT MANAGEMENT
+        // =====================
+
+        {
+            id:"engagement_email",
+            label:"Email",
+            type:"radio",
+
+            dependsOn:"preference_type",
+            showWhen:"Member Engagement Management",
+
+            options:[
+                "Opt In",
+                "Opt Out"
+            ]
+        },
+
+        {
+            id:"engagement_mail",
+            label:"US Mail",
+            type:"radio",
+
+            dependsOn:"preference_type",
+            showWhen:"Member Engagement Management",
+
+            options:[
+                "Opt In",
+                "Opt Out"
+            ]
+        },
+
+        {
+            id:"engagement_phone",
+            label:"Phone",
+            type:"radio",
+
+            dependsOn:"preference_type",
+            showWhen:"Member Engagement Management",
+
+            options:[
+                "Opt In",
+                "Opt Out"
+            ]
+        },
+
+        {
+            id:"engagement_text",
+            label:"Text",
+            type:"radio",
+
+            dependsOn:"preference_type",
+            showWhen:"Member Engagement Management",
+
+            options:[
+                "Opt In",
+                "Opt Out"
+            ]
+        },
+
+        // =====================
+        // RACE / ETHNICITY
+        // =====================
+
+        {
+            id:"member_race",
+            label:"Race",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"preference_type",
+            showWhen:"Race or Ethnicity"
+        },
+
+        {
+            id:"member_ethnicity",
+            label:"Ethnicity",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"preference_type",
+            showWhen:"Race or Ethnicity"
+        },
+
+        // =====================
+        // PRONOUN
+        // =====================
+
+        {
+            id:"member_pronoun",
+            label:"Pronoun",
+            type:"textarea",
+            size:"small",
+
+            dependsOn:"preference_type",
+            showWhen:"Pronoun"
+        },
+
+        // =====================
+        // NOTES
+        // =====================
+
+        {
+            id:"member_preferences_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"updatepcp",
+    icon:"🩺",
+
+    name:"Update PCP",
+
+    category:"Updates",
+
+    favorite:true,
+
+    keywords:[
+        "PCP",
+        "Primary Care",
+        "Doctor",
+        "Physician",
+        "Medical Group",
+        "Update PCP"
+    ],
+
+    note:`
+Update PCP intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"pcp_address_verified",
+            label:"Address Verified",
+            type:"radio",
+
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"pcp_name",
+            label:"Doctor Name",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"pcp_group",
+            label:"PPG / Medical Group",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"pcp_phone",
+            label:"Phone Number",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"pcp_address",
+            label:"Address",
+            type:"textarea",
+            size:"medium"
+        },
+
+        {
+            id:"pcp_npi",
+            label:"NPI",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"pcp_accepting_new",
+            label:"Accepting New Patients",
+            type:"radio",
+
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"pcp_retro_restriction",
+            label:"Retro Effective Date Restriction",
+            type:"radio",
+
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"pcp_effective_date",
+            label:"Effective Date",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"pcp_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+/* =====================================
+       BENEFITS/AUTHS/CLAIMS
+===================================== */
+
+{
+    id:"accumulator",
+    icon:"🧮",
+
+    name:"Accumulator Inquiry",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Accumulator",
+        "Accumulators",
+        "Acc",
+        "Inquiry"
+    ],
+
+    note:`
+Accumulator Inquiry intent was opened to assist the caller.
+`,
+
+    fields:[
+
+        {
+            id:"accumulator_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"benefitsEligibility",
+    icon:"💳",
+    name:"Benefits & Eligibility",
+    favorite:true,
+    keywords:["b&e","benefits","eligibility","plan"],
+    note:`
+B&E intent was opened to get the plan information and assist the caller.
+
+Disclaimers were read.
+
+`,
+
+    fields:[
+
+    {
+    id:"be_disclaimers",
+    label:"Disclaimers",
+    type:"textarea",
+    size:"large"
+},
+
+{
+    id:"be_tools",
+    label:"Tools Used",
+    type:"textarea",
+    size:"small"
+},
+
+{
+    id:"be_information",
+    label:"Information Quoted",
+    type:"textarea",
+    size:"large"
+}
+
+]
+},
+
+{
+    id:"caremanagement",
+    icon:"👩‍⚕️",
+
+    name:"Care Management",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Care",
+        "Management",
+        "Case Manager",
+        "Care Manager"
+    ],
+
+    note:`
+Care Management intent was opened to assist the caller
+`,
+
+    fields:[
+
+        {
+            id:"care_management_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"claimsinquiry",
+    icon:"📄",
+
+    name:"Claims Inquiry",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Claims",
+        "Claim",
+        "Charges",
+        "Payment",
+        "Claim Inquiry"
+    ],
+
+    note:`
+Claims Inquiry intent was opened to assist the caller
+`,
+
+    fields:[
+
+        {
+            id:"claims_inquiry_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+id:"coordinationofbenefits",
+    icon:"🤝",
+
+    name:"Coordination of Benefits",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Coordination",
+        "Benefits",
+        "COB",
+        "Other Insurance",
+        "Coordination of Benefits"
+    ],
+
+    note:`
+Coordination of Benefits intent was opened to assist the caller
+`,
+
+    fields:[
+
+        {
+            id:"coordination_of_benefits_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"gaps",
+
+    icon:"📌",
+
+    name:"Gaps in Care",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:true,
+
+    keywords:[
+        "Gaps",
+        "Gap",
+        "Healthy Reminder",
+        "Preventive Care"
+    ],
+
+    note:`
+Gaps in Care intent was opened to review 1 healthy reminder.
+`,
+
+    fields:[
+        {
+            id:"gaps_reminders",
+            label:"Healthy Reminder(s)",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"gaps_status",
+            label:"Appointment Status",
+            type:"radio",
+
+            options:[
+
+                {
+                    text:"M/Scheduled",
+                    value:"Caller will schedule the appointment."
+                },
+
+                {
+                    text:"A/Scheduled",
+                    value:"Appointment was scheduled by the agent."
+                },
+
+                {
+                    text:"Cancelled",
+                    value:"Appointment was cancelled."
+                },
+
+                {
+                    text:"Not Mentioned",
+                    value:"Appointment status was not mentioned."
+                }
+
+            ]
+        },
+
+        {
+            id:"gaps_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+
+},
+
+{
+id:"lowincomesubsidy",
+    icon:"💵",
+
+    name:"Low Income Subsidy",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Low Income",
+        "LIS",
+        "Subsidy",
+        "Extra Help",
+        "Low Income Subsidy"
+    ],
+
+    note:`
+Low Income Subsidy intent was opened to assist the caller
+`,
+
+    fields:[
+
+        {
+            id:"low_income_subsidy_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"medicalauthenticationinquiry",
+    icon:"🔐",
+
+    name:"Medical Authentication Inquiry",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Medical",
+        "Authentication",
+        "Inquiry",
+        "Medical Authentication"
+    ],
+
+    note:`
+Medical Authentication Inquiry intent was opened to assist the caller
+`,
+
+    fields:[
+
+        {
+            id:"medical_authentication_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"pharmacyauthorizationinquiry",
+    icon:"💊",
+
+    name:"Pharmacy Authorization Inquiry",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Pharmacy",
+        "Authorization",
+        "Prior Authorization",
+        "Part D",
+        "PA",
+        "Pharmacy Authorization"
+    ],
+
+    note:`
+Pharmacy Authorization Inquiry intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"pharmacy_auth_warm_transfer",
+            label:"Member Was Warm Transferred to the Part D Team",
+            type:"radio",
+
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"pharmacy_auth_spoke_with",
+            label:"Spoke With",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"pharmacy_auth_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"pharmacyclaims",
+    icon:"💊",
+
+    name:"Pharmacy Claims",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Pharmacy",
+        "Claims",
+        "Prescription",
+        "Rx",
+        "Pharmacy Claims"
+    ],
+
+    note:`
+Pharmacy Claims intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"pharmacy_claims_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+{
+    id:"returnmail",
+    icon:"📬",
+
+    name:"Return Mail",
+
+    category:"Benefits/Auths/Claims",
+
+    favorite:false,
+
+    keywords:[
+        "Return Mail",
+        "Mail",
+        "Returned Mail",
+        "Undeliverable",
+        "Address"
+    ],
+
+    note:`
+Return Mail intent was opened to assist the caller with:
+`,
+
+    fields:[
+
+        {
+            id:"return_mail_notes",
+            label:"Notes",
+            type:"textarea",
+            size:"large"
+        }
+
+    ]
+},
+
+];
+
+let selectedActions = [];
+
+let expandedAction = null;
+
+const actionValues = {};
+
 function generate(){
 
     let text = "";
@@ -641,44 +2331,99 @@ function generate(){
     let caller = document.getElementById("caller").checked;
     let member = document.getElementById("member").checked;
 
-    if(caller) text += "Caller is calling us due to.\n";
-    if(member) text += "Member is calling us due to.\n";
+    const reason = document
+    .getElementById("reasonForCall")
+    .value
+    .trim();
+
+if(caller){
+
+    text += "Reason: Caller is calling us due to ";
+
+    if(reason !== ""){
+
+        text += reason + ".\n";
+
+    }
+
+}
+
+if(member){
+
+    text += "Reason: Member is calling us due to ";
+
+    if(reason !== ""){
+
+        text += reason + ".\n";
+
+    }
+
+}
 
     let hipaa = document.querySelector('input[name="hipaa"]:checked');
     if(hipaa)text += "HIPAA Verifiers: " + hipaa.value + ".\n";
 
     let firstTime = document.querySelector('input[name="firstTime"]:checked');
-    if(firstTime) text += "It's the first time calling us about this matter?: " + firstTime.value + ".\n";
+    if(firstTime) text += "Is this the first time calling us about this matter?: " + firstTime.value + ".\n";
 
     let personal = document.querySelector('input[name="personalChange"]:checked');
-    if(personal) text += "Has any of your personal information change recently?: " + personal.value + ".\n";
+    if(personal) text += "Has any of your personal information changed recently?: " + personal.value + ".\n";
 
     let contact = document.querySelector('input[name="contactValid"]:checked');
-    if(contact) text += "Is the Email and Phone Number still valid?: " + contact.value + ".\n";
+    if(contact) text += "Is your email address and phone number still valid?: " + contact.value + ".\n";
 
     let website = document.querySelector('input[name="website"]:checked');
     if(website) text += "Website: " + website.value + ".\n";
 
-    let gaps = document.querySelector('input[name="gaps"]:checked');
-    if(gaps) text += "Gaps: " + gaps.value + ".\n";
+  if(selectedActions.length){
 
-  let actions = [...document.querySelectorAll('input[name="actions"]:checked')]
-.map(i => i.value);
+    text += "Actions:\n\n";
 
+    selectedActions.forEach(action=>{
 
-// Buscar el elemento que empieza con B&E
-const be = actions.find(a => a.startsWith("B&E"));
+        text += action.note + "\n";
 
-if(be){
+        if(action.fields){
 
-    actions = actions.filter(a => !a.startsWith("B&E"));
+    const appendField = action.fields.find(field => field.appendToNote);
 
-    actions.unshift(be);
+    if(appendField){
+
+        const value = actionValues[appendField.id];
+
+        if(value){
+
+            text = text.trimEnd() + " " + value + "\n";
+
+        }
+
+    }
 
 }
 
-if(actions.length)
-    text += "Actions: " + actions.join(", ") + ".\n";
+        if(action.fields){
+
+            action.fields.forEach(field=>{
+
+                const value = actionValues[field.id] || "";
+
+                if(value !== ""){
+
+    if(field.appendToNote) return;
+
+    text += field.label + ": " + value + "\n";
+
+}
+
+            });
+
+        }
+
+        text += "\n";
+
+    });
+
+}
 
 const callerName = document
     .getElementById("callerNameInput")
@@ -707,13 +2452,64 @@ if(metInteractionId !== ""){
     text += "Met Interaction ID: " + metInteractionId + "\n";
 }
 
+
+
     let inHome = [...document.querySelectorAll('input[name="inHome"]:checked')].map(i => i.value);
     if(inHome.length) text += "In Home Assessment: " + inHome.join(", ") + ".\n";
 
-    let resolution = [...document.querySelectorAll('input[name="resolution"]:checked')].map(i => i.value);
-    if(resolution.length) text += "Resolution: " + resolution.join(", ") + ".\n";
+    const resolution =
+    document.querySelector('input[name="resolution"]:checked');
+
+if(resolution){
+
+    text += "Resolution: " + resolution.value;
+
+    const resolutionNotes =
+        document.getElementById("resolutionNotes")
+        .value
+        .trim();
+
+    if(resolutionNotes !== ""){
+
+        text += " " + resolutionNotes;
+
+    }
+
+    text += ".\n";
+
+};
 
     document.getElementById("nota").value = text;
+}
+
+function filterActions(){
+
+    const search = document
+        .getElementById("actionSearch")
+        .value
+        .toLowerCase();
+
+    const labels = document.querySelectorAll(".actions-grid label");
+
+    labels.forEach(label => {
+
+        const checkbox = label.querySelector("input");
+
+        const visibleText = label.textContent.toLowerCase();
+
+        const valueText = checkbox.value.toLowerCase();
+
+        if(
+            visibleText.includes(search) ||
+            valueText.includes(search)
+        ){
+            label.style.display = "flex";
+        }else{
+            label.style.display = "none";
+        }
+
+    });
+
 }
 
 function copiar(){
@@ -728,6 +2524,448 @@ function copiar(){
     }, 1500);
 
 }
+
+function resetForm(){
+
+    if(!confirm("Are you sure you want to reset the form?")){
+        return;
+    }
+
+    // Vaciar todos los valores del motor
+    Object.keys(actionValues).forEach(key=>{
+        delete actionValues[key];
+    });
+
+    // Limpiar acciones
+    selectedActions = [];
+
+    expandedAction = null;
+
+    // Limpiar todos los inputs
+    document.querySelectorAll("input").forEach(input=>{
+
+        if(input.type==="radio" || input.type==="checkbox"){
+
+            input.checked = false;
+
+        }else{
+
+            input.value = "";
+
+        }
+
+    });
+
+    // Limpiar todos los textarea
+    document.querySelectorAll("textarea").forEach(textarea=>{
+
+        textarea.value = "";
+
+    });
+
+    // Limpiar todos los select
+    document.querySelectorAll("select").forEach(select=>{
+
+        select.selectedIndex = 0;
+
+    });
+
+    // Ocultar Resolution Details
+    const resolutionContainer =
+        document.getElementById("resolutionContainer");
+
+    if(resolutionContainer){
+
+        resolutionContainer.style.display = "none";
+
+    }
+
+    // Limpiar búsqueda
+    document.getElementById("searchResults").style.display="none";
+    document.getElementById("favoriteActions").style.display="grid";
+
+    // Volver a dibujar todo
+    renderFavoriteActions();
+    renderSelectedActions();
+    renderActionDetails();
+
+    generate();
+
+}
+
+function renderFavoriteActions(){
+
+    const container = document.getElementById("favoriteActions");
+
+    container.innerHTML = "";
+
+    actions
+    .filter(action => action.favorite)
+    .filter(action => !selectedActions.some(a => a.id === action.id))
+    .forEach(action=>{
+
+        container.innerHTML += `
+
+<label
+class="small-option"
+onclick="toggleAction('${action.id}')">
+
+${action.name}
+
+</label>
+
+`;
+
+    });
+
+}
+
+function renderSelectedActions(){
+
+    const container = document.getElementById("selectedActions");
+
+    container.innerHTML = "";
+
+    if(selectedActions.length === 0){
+
+        container.innerHTML = `
+            <div class="empty-actions">
+                <div class="empty-title">
+                    No actions selected
+                </div>
+                <div class="empty-subtitle">
+                    Search above or choose a Quick Action.
+                </div>
+            </div>
+        `;
+
+        return;
+
+    }
+
+    selectedActions.forEach(action => {
+
+        container.innerHTML += `
+            <div class="selected-chip">
+
+                <span>${action.name}</span>
+
+                <span class="remove-action"
+                      onclick="toggleAction('${action.id}')">
+
+                    ✕
+
+                </span>
+
+            </div>
+        `;
+
+    });
+
+}
+function renderActionDetails(){
+
+    const container = document.getElementById("actionDetails");
+
+    container.innerHTML = "";
+
+    selectedActions.forEach(action=>{
+
+        container.innerHTML += `
+
+    <div class="action-detail-card">
+
+        <div
+            class="action-detail-title"
+            onclick="toggleAccordion('${action.id}')"
+            style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+
+            <span>${action.icon || "📌"} ${action.name}</span>
+
+            <span>
+
+                ${expandedAction === action.id ? "▼" : "▶"}
+
+            </span>
+
+        </div>
+
+        <div id="details-${action.id}"></div>
+
+    </div>
+
+`;
+
+        const detailContainer =
+            document.getElementById(`details-${action.id}`);
+            if(expandedAction !== action.id){
+
+    return;
+
+}
+
+        if(!action.fields) return;
+
+        action.fields.forEach(field=>{
+
+            // Hide conditional fields
+if(field.showWhen){
+
+    const dependsOn = field.dependsOn || "language_service";
+
+    console.log(
+    "Campo:",
+    field.label,
+    "| dependsOn:",
+    dependsOn,
+    "| Valor:",
+    actionValues[dependsOn],
+    "| showWhen:",
+    field.showWhen
+);
+
+    if(actionValues[dependsOn] !== field.showWhen){
+        return;
+    }
+
+}
+
+            if(field.type==="textarea"){
+
+                detailContainer.innerHTML += `
+                    <label class="detail-label">
+                        ${field.label}
+                    </label>
+
+                    <textarea
+    id="${field.id}"
+    class="detail-textarea ${field.size || 'medium'}"
+    rows="${field.rows || 3}"
+    oninput="
+        actionValues['${field.id}']=this.value;
+        generate();
+    "
+>${actionValues[field.id] || ""}</textarea>
+                `;
+            }
+
+            if(field.type==="radio"){
+
+                detailContainer.innerHTML += `
+                    <label class="detail-label">
+                        ${field.label}
+                    </label>
+
+                    <div class="detail-radio-group">
+
+                        ${field.options.map(option=>{
+
+    const optionText =
+        typeof option === "object"
+            ? option.text
+            : option;
+
+    const optionValue =
+        typeof option === "object"
+            ? option.value
+            : option;
+
+    return `
+
+        <label>
+
+            <input
+                type="radio"
+                name="${field.id}"
+                value="${optionValue}"
+                ${actionValues[field.id]===optionValue ? "checked" : ""}
+                onchange="
+                    actionValues['${field.id}']=this.value;
+                    renderActionDetails();
+                    generate();
+                ">
+
+            ${optionText}
+
+        </label>
+
+    `;
+
+}).join("")}
+
+                    </div>
+                `;
+            }
+
+            if(field.type==="select"){
+
+    detailContainer.innerHTML += `
+        <label class="detail-label">
+            ${field.label}
+        </label>
+
+        <select
+            class="text-input"
+            onchange="
+    actionValues['${field.id}']=this.value;
+    renderActionDetails();
+    generate();
+">
+
+            <option value="" ${!actionValues[field.id] ? "selected" : ""}>
+                Select an issue...
+            </option>
+
+            ${field.options.map(option=>`
+                <option
+                    value="${option}"
+                    ${actionValues[field.id]===option ? "selected" : ""}>
+                    ${option}
+                </option>
+            `).join("")}
+
+        </select>
+    `;
+
+}
+
+        });
+
+    });
+
+}
+function toggleAccordion(id){
+
+    expandedAction = id;
+
+    renderActionDetails();
+
+    generate();
+
+}
+
+function toggleAction(id){
+
+    const action = actions.find(a => a.id === id);
+
+    const index = selectedActions.findIndex(a => a.id === id);
+
+    if(index === -1){
+
+    selectedActions.push(action);
+
+    expandedAction = action.id;
+
+}else{
+
+    selectedActions.splice(index,1);
+
+    if(action.fields){
+
+    action.fields.forEach(field=>{
+
+        delete actionValues[field.id];
+
+    });
+
+}
+
+    if(expandedAction === action.id){
+
+        expandedAction = selectedActions.length
+            ? selectedActions[selectedActions.length - 1].id
+            : null;
+
+    }
+
+}
+
+    renderFavoriteActions();
+    renderSelectedActions();
+    renderActionDetails();
+    generate();
+
+}
+function searchActions(){
+
+    const search = document
+        .getElementById("actionSearch")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const results = document.getElementById("searchResults");
+
+    results.innerHTML = "";
+
+    if(search === ""){
+
+    results.style.display = "none";
+
+    document.getElementById("favoriteActions").style.display = "grid";
+
+    return;
+
+}
+
+    const filtered = actions.filter(action => {
+
+        // No mostrar acciones ya seleccionadas
+        if(selectedActions.some(a => a.id === action.id))
+            return false;
+
+        // Buscar por nombre
+        if(action.name.toLowerCase().includes(search))
+            return true;
+
+        // Buscar por keywords
+        return action.keywords.some(keyword =>
+            keyword.toLowerCase().includes(search)
+        );
+
+    });
+
+    if(filtered.length === 0){
+
+        results.style.display = "none";
+
+        return;
+
+    }
+
+    results.style.display = "block";
+    document.getElementById("favoriteActions").style.display = "none";
+
+    filtered.forEach(action=>{
+
+        results.innerHTML += `
+            <div class="search-item"
+                onclick="selectSearchAction('${action.id}')">
+
+                ${action.name}
+
+            </div>
+        `;
+
+    });
+
+}
+function selectSearchAction(id){
+
+    toggleAction(id);
+
+    document.getElementById("actionSearch").value = "";
+
+    document.getElementById("searchResults").style.display = "none";
+
+    document.getElementById("favoriteActions").style.display = "grid";
+
+}
+
+renderFavoriteActions();
+renderSelectedActions();
+generate();
+searchActions();
 
 </script>
 
