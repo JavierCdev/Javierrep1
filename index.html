@@ -206,6 +206,8 @@ textarea{
     border:1px solid #cbd5e1;
     font-size:12px;
     box-sizing:border-box;
+    color:#0f172a;
+    caret-color:#2563eb;
 }
 
 /* BUTTON */
@@ -245,28 +247,6 @@ textarea{
 
 }
 
-.selected-chip{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    background:#2563eb;
-
-    color:white;
-
-    padding:10px 14px;
-
-    border-radius:8px;
-
-    margin-bottom:8px;
-
-    font-size:13px;
-
-}
-
 .remove-action{
 
     cursor:pointer;
@@ -293,14 +273,6 @@ textarea{
     border-radius:8px;
     margin-bottom:8px;
     font-size:13px;
-}
-
-.remove-action{
-    cursor:pointer;
-    font-weight:bold;
-}
-.remove-action:hover{
-    color:#ffd4d4;
 }
 
 .empty-actions{
@@ -394,6 +366,28 @@ textarea{
     font-weight:600;
     padding:4px 0;
 }
+.action-detail-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.remove-demographic{
+    border:none;
+    background:#ef4444;
+    color:white;
+    border-radius:6px;
+    padding:4px 8px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.remove-demographic:hover{
+    background:#dc2626;
+}
 .detail-label{
     display:block;
     color:#334155;
@@ -486,7 +480,53 @@ textarea{
     background:#d97706;
 
 }
+.footer-credit{
+    margin-top:18px;
+    text-align:center;
+    font-size:11px;
+    color:#94a3b8;
+    letter-spacing:.5px;
+    user-select:none;
+}
 
+.footer-credit .heart{
+    display:inline-block;
+    animation:heartbeat 1.3s ease-in-out infinite;
+    transform-origin:center;
+}
+.max-updates{
+    margin-top:8px;
+    padding:10px;
+    text-align:center;
+    background:#e2e8f0;
+    color:#475569;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+}
+
+@keyframes heartbeat{
+    0%{
+        transform:scale(1);
+    }
+    15%{
+        transform:scale(1.3);
+    }
+    30%{
+        transform:scale(1);
+    }
+    45%{
+        transform:scale(1.25);
+    }
+    60%{
+        transform:scale(1);
+    }
+    100%{
+        transform:scale(1);
+    }
+    
+}
 
 </style>
 </head>
@@ -695,6 +735,9 @@ Member
 <button class="reset-btn" onclick="resetForm()">
     🔄 Reset Form
 </button>
+<div class="footer-credit">
+    Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
+</div>
 
 </div>
 
@@ -1389,27 +1432,15 @@ Out of Area Notification intent was opened to assist the caller with:
     ],
 
     note:`
-Member Demographics intent was opened to assist the caller with:
+Member Demographics intent was opened to assist the caller with the following update(s):
 `,
 
     fields:[
 
         {
-            id:"update_type",
-            label:"Update Type",
-            type:"select",
-
-            appendToNote:true,
-
-            options:[
-                "Address",
-                "Authorized Contacts",
-                "Date of Birth",
-                "Gender",
-                "Name",
-                "Phone Number"
-            ]
-        },
+    id:"member_demographics_updates",
+    type:"multiDemographic"
+},
 
         // =====================
         // ADDRESS
@@ -1525,17 +1556,6 @@ Member Demographics intent was opened to assist the caller with:
             showWhen:"Phone Number"
         },
 
-        // =====================
-        // NOTES
-        // =====================
-
-        {
-            id:"member_demo_notes",
-            label:"Notes",
-            type:"textarea",
-            size:"large"
-        }
-
     ]
 },
 
@@ -1570,22 +1590,9 @@ Update Member Preferences intent was opened to assist the caller with:
         // =====================
 
         {
-            id:"preference_type",
-            label:"Update Type",
-            type:"select",
-
-            appendToNote:true,
-
-            options:[
-                "Alternate Format Preferences",
-                "Electronic Document Delivery Option",
-                "Email",
-                "Member Language",
-                "Member Engagement Management",
-                "Race or Ethnicity",
-                "Pronoun"
-            ]
-        },
+    id:"member_preferences_updates",
+    type:"multiPreference"
+},
 
         // =====================
         // ALTERNATE FORMAT
@@ -1596,7 +1603,7 @@ Update Member Preferences intent was opened to assist the caller with:
             label:"Alternate Format Preference",
             type:"select",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Alternate Format Preferences",
 
             options:[
@@ -1621,7 +1628,7 @@ Update Member Preferences intent was opened to assist the caller with:
             label:"Electronic Document Delivery",
             type:"radio",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Electronic Document Delivery Option",
 
             options:[
@@ -1640,7 +1647,7 @@ Update Member Preferences intent was opened to assist the caller with:
             type:"textarea",
             size:"small",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Email"
         },
 
@@ -1654,7 +1661,7 @@ Update Member Preferences intent was opened to assist the caller with:
             type:"textarea",
             size:"small",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Member Language"
         },
 
@@ -1667,7 +1674,7 @@ Update Member Preferences intent was opened to assist the caller with:
             label:"Email",
             type:"radio",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Member Engagement Management",
 
             options:[
@@ -1681,7 +1688,7 @@ Update Member Preferences intent was opened to assist the caller with:
             label:"US Mail",
             type:"radio",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Member Engagement Management",
 
             options:[
@@ -1695,7 +1702,7 @@ Update Member Preferences intent was opened to assist the caller with:
             label:"Phone",
             type:"radio",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Member Engagement Management",
 
             options:[
@@ -1709,7 +1716,7 @@ Update Member Preferences intent was opened to assist the caller with:
             label:"Text",
             type:"radio",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Member Engagement Management",
 
             options:[
@@ -1728,7 +1735,7 @@ Update Member Preferences intent was opened to assist the caller with:
             type:"textarea",
             size:"small",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Race or Ethnicity"
         },
 
@@ -1738,7 +1745,7 @@ Update Member Preferences intent was opened to assist the caller with:
             type:"textarea",
             size:"small",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Race or Ethnicity"
         },
 
@@ -1752,7 +1759,7 @@ Update Member Preferences intent was opened to assist the caller with:
             type:"textarea",
             size:"small",
 
-            dependsOn:"preference_type",
+            dependsOn:"update_type",
             showWhen:"Pronoun"
         },
 
@@ -1926,17 +1933,31 @@ Accumulator Inquiry intent was opened to assist the caller.
     note:`
 B&E intent was opened to get the plan information and assist the caller.
 
-Disclaimers were read.
-
 `,
 
     fields:[
 
     {
+    id:"be_active_verification",
+    label:"Is the member calling to verify the plan is active?",
+    type:"radio",
+
+    excludeFromNote:true,
+
+    options:[
+        "Yes",
+        "No"
+    ]
+},
+
+    {
     id:"be_disclaimers",
     label:"Disclaimers",
     type:"textarea",
-    size:"large"
+    size:"large",
+
+    dependsOn:"be_active_verification",
+    showWhen:"Yes"
 },
 
 {
@@ -2323,6 +2344,10 @@ let selectedActions = [];
 let expandedAction = null;
 
 const actionValues = {};
+let memberDemographics = [];
+let demographicCounter = 0;
+let memberPreferences = [];
+let preferenceCounter = 0;
 
 function generate(){
 
@@ -2400,24 +2425,33 @@ if(member){
     }
 
 }
+if(action.id==="memberdemographics"){
 
-        if(action.fields){
+    text += generateMemberDemographics();
 
-            action.fields.forEach(field=>{
+}else if(action.id==="updatememberpreferences"){
 
-                const value = actionValues[field.id] || "";
+    text += generateMemberPreferences();
 
-                if(value !== ""){
+}else if(action.fields){
+
+    action.fields.forEach(field=>{
+
+        const value = actionValues[field.id] || "";
+
+        if(value !== ""){
 
     if(field.appendToNote) return;
+
+    if(field.excludeFromNote) return;
 
     text += field.label + ": " + value + "\n";
 
 }
 
-            });
+    });
 
-        }
+}
 
         text += "\n";
 
@@ -2481,6 +2515,507 @@ if(resolution){
 
     document.getElementById("nota").value = text;
 }
+function addDemographicBlock(){
+
+    // Máximo de 6 updates
+    if(memberDemographics.length >= 6){
+        return;
+    }
+
+    demographicCounter++;
+
+    memberDemographics.push({
+        id: demographicCounter,
+        updateType: "",
+        values: {}
+    });
+
+    renderActionDetails();
+    generate();
+}
+
+
+function updateDemographicType(id, value){
+
+    const block = memberDemographics.find(d => d.id === id);
+
+    if(!block) return;
+
+    // Limpiar todos los datos del update anterior
+    block.values = {};
+
+    // Asignar el nuevo tipo
+    block.updateType = value;
+
+    // Volver a dibujar los campos
+    renderActionDetails();
+generate();
+
+}
+
+
+function renderDemographicBlocks(){
+
+    const container =
+        document.getElementById("memberDemographicBlocks");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    if(memberDemographics.length === 0){
+
+    container.innerHTML = `
+        <div class="empty-actions">
+            <div class="empty-title">
+                No demographic updates have been added.
+            </div>
+
+            <div class="empty-subtitle">
+                Press <strong>+ Add Update</strong>.
+            </div>
+        </div>
+    `;
+
+    return;
+}
+
+
+    const memberAction =
+        actions.find(a => a.id === "memberdemographics");
+
+    memberDemographics.forEach((block, index)=>{
+
+        const usedTypes = memberDemographics
+            .filter(d => d.id !== block.id)
+            .map(d => d.updateType);
+
+        let card = `
+
+<div class="action-detail-card">
+
+    <div class="action-detail-header">
+
+        <div class="action-detail-title">
+            Demographic ${index + 1}
+        </div>
+
+        <button
+            type="button"
+            class="remove-demographic"
+            onclick="removeDemographic(${block.id})">
+
+            🗑 Remove
+
+        </button>
+
+    </div>
+
+    <label class="detail-label">
+        Update Type
+    </label>
+
+    <select
+        class="text-input"
+        onchange="updateDemographicType(${block.id}, this.value)">
+
+        <option value=""
+            ${block.updateType===""?"selected":""}>
+            Select...
+        </option>
+
+        ${[
+            "Address",
+            "Authorized Contacts",
+            "Date of Birth",
+            "Gender",
+            "Name",
+            "Phone Number"
+        ]
+        .filter(option =>
+            !usedTypes.includes(option) ||
+            option===block.updateType
+        )
+        .map(option=>`
+            <option
+                value="${option}"
+                ${block.updateType===option?"selected":""}>
+                ${option}
+            </option>
+        `).join("")}
+
+    </select>
+`;
+
+        memberAction.fields.forEach(field=>{
+
+            if(field.dependsOn !== "update_type") return;
+
+            if(field.showWhen !== block.updateType) return;
+
+            card += `
+
+<label class="detail-label">
+    ${field.label}
+</label>
+
+<textarea
+    class="detail-textarea ${field.size || "small"}"
+    placeholder="${field.label}"
+    oninput="
+    memberDemographics.find(d=>d.id===${block.id})
+    .values['${field.id}']=this.value;
+    generate();
+">${block.values[field.id] || ""}</textarea>
+
+`;
+
+        });
+
+        card += `
+
+<label class="detail-label">
+    Notes
+</label>
+
+<textarea
+    class="detail-textarea large"
+    placeholder="Additional notes"
+    oninput="
+    memberDemographics.find(d=>d.id===${block.id})
+    .values['member_demo_notes']=this.value;
+    generate();
+">${block.values["member_demo_notes"] || ""}</textarea>
+
+</div>
+
+`;
+
+        container.innerHTML += card;
+
+    });
+
+}
+
+function renderPreferenceBlocks(){
+
+    const container =
+        document.getElementById("memberPreferenceBlocks");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    if(memberPreferences.length === 0){
+
+        container.innerHTML = `
+        <div class="empty-actions">
+            <div class="empty-title">
+                No preference updates have been added.
+            </div>
+
+            <div class="empty-subtitle">
+                Press <strong>+ Add Preference</strong>.
+            </div>
+        </div>
+        `;
+
+        return;
+    }
+
+    const memberAction =
+        actions.find(a => a.id === "updatememberpreferences");
+
+    memberPreferences.forEach((block,index)=>{
+
+        const usedTypes = memberPreferences
+            .filter(p => p.id !== block.id)
+            .map(p => p.updateType);
+
+        let card = `
+
+<div class="action-detail-card">
+
+    <div class="action-detail-header">
+
+        <div class="action-detail-title">
+            Preference ${index + 1}
+        </div>
+
+        <button
+            type="button"
+            class="remove-demographic"
+            onclick="removePreference(${block.id})">
+
+            🗑 Remove
+
+        </button>
+
+    </div>
+
+    <label class="detail-label">
+        Update Type
+    </label>
+
+    <select
+        class="text-input"
+        onchange="updatePreferenceType(${block.id}, this.value)">
+
+        <option value=""
+            ${block.updateType===""?"selected":""}>
+            Select...
+        </option>
+
+        ${[
+            "Alternate Format Preferences",
+            "Electronic Document Delivery Option",
+            "Email",
+            "Member Language",
+            "Member Engagement Management",
+            "Race or Ethnicity",
+            "Pronoun"
+        ]
+        .filter(option =>
+            !usedTypes.includes(option) ||
+            option===block.updateType
+        )
+        .map(option=>`
+            <option
+                value="${option}"
+                ${block.updateType===option?"selected":""}>
+                ${option}
+            </option>
+        `).join("")}
+
+    </select>
+`;
+
+        memberAction.fields.forEach(field=>{
+
+            if(field.dependsOn !== "update_type") return;
+
+            if(field.showWhen !== block.updateType) return;
+
+            card += renderPreferenceField(field, block);
+
+        });
+
+        card += `
+
+<label class="detail-label">
+    Notes
+</label>
+
+<textarea
+    class="detail-textarea large"
+    placeholder="Additional notes"
+    oninput="
+    memberPreferences.find(p=>p.id===${block.id})
+    .values['member_preferences_notes']=this.value;
+    generate();
+">${block.values["member_preferences_notes"] || ""}</textarea>
+
+</div>
+
+`;
+
+        container.innerHTML += card;
+
+    });
+
+}
+
+function renderPreferenceField(field, block){
+
+    const value = block.values[field.id] || "";
+
+    // TEXTAREA
+    if(field.type==="textarea"){
+
+        return `
+<label class="detail-label">
+    ${field.label}
+</label>
+
+<textarea
+    class="detail-textarea ${field.size || ""}"
+    placeholder="${field.label}"
+    oninput="
+memberPreferences.find(p=>p.id===${block.id}).values['${field.id}']=this.value;
+generate();
+">${value}</textarea>
+`;
+
+    }
+
+    // SELECT
+    if(field.type==="select"){
+
+        return `
+<label class="detail-label">
+    ${field.label}
+</label>
+
+<select
+    class="text-input"
+    onchange="
+memberPreferences.find(p=>p.id===${block.id}).values['${field.id}']=this.value;
+generate();
+">
+
+<option value="">Select...</option>
+
+${field.options.map(option=>`
+
+<option
+value="${option}"
+${value===option?"selected":""}>
+${option}
+</option>
+
+`).join("")}
+
+</select>
+`;
+
+    }
+
+    // RADIO
+    if(field.type==="radio"){
+
+        return `
+<label class="detail-label">
+${field.label}
+</label>
+
+<div class="detail-radio-group">
+
+${field.options.map(option=>`
+
+<label>
+
+<input
+type="radio"
+name="${field.id}_${block.id}"
+value="${option}"
+${value===option?"checked":""}
+
+onchange="
+memberPreferences.find(p=>p.id===${block.id}).values['${field.id}']=this.value;
+generate();
+">
+
+${option}
+
+</label>
+
+`).join("")}
+
+</div>
+`;
+
+    }
+
+    return "";
+
+}
+
+function generateMemberDemographics(){
+
+    let text = "";
+
+    memberDemographics.forEach(block=>{
+
+        if(block.updateType==="") return;
+
+        text += "Update Type: " + block.updateType + "\n";
+
+        const memberAction =
+            actions.find(a=>a.id==="memberdemographics");
+
+        memberAction.fields.forEach(field=>{
+
+            if(field.dependsOn!=="update_type") return;
+
+            if(field.showWhen!==block.updateType) return;
+
+            const value = block.values[field.id];
+
+            if(value){
+
+                text += field.label + ": " + value + "\n";
+
+            }
+
+        });
+
+        const notes = block.values["member_demo_notes"];
+
+if(notes){
+    text += `Notes: ${notes}\n`;
+}
+
+        text += "\n";
+
+    });
+
+
+    return text;
+
+}
+
+function removeDemographic(id){
+
+    memberDemographics = memberDemographics.filter(
+        d => d.id !== id
+    );
+
+    renderActionDetails();
+    generate();
+
+}
+function generateMemberPreferences(){
+
+    let text = "";
+
+    memberPreferences.forEach(block=>{
+
+        if(block.updateType==="") return;
+
+        text += "Update Type: " + block.updateType + "\n";
+
+        const memberAction =
+            actions.find(a=>a.id==="updatememberpreferences");
+
+        memberAction.fields.forEach(field=>{
+
+            if(field.dependsOn!=="update_type") return;
+
+            if(field.showWhen!==block.updateType) return;
+
+            const value = block.values[field.id];
+
+            if(value){
+
+                text += field.label + ": " + value + "\n";
+
+            }
+
+        });
+
+        const notes = block.values["member_preferences_notes"];
+
+        if(notes){
+            text += `Notes: ${notes}\n`;
+        }
+
+        text += "\n";
+
+    });
+
+    return text;
+
+}
 
 function filterActions(){
 
@@ -2511,7 +3046,47 @@ function filterActions(){
     });
 
 }
+function addPreferenceBlock(){
 
+    // Máximo de 7 updates
+    if(memberPreferences.length >= 7){
+        return;
+    }
+
+    preferenceCounter++;
+
+    memberPreferences.push({
+        id: preferenceCounter,
+        updateType:"",
+        values:{}
+    });
+
+    renderActionDetails();
+    generate();
+
+}
+function updatePreferenceType(id, value){
+
+    const block = memberPreferences.find(p => p.id === id);
+
+    if(!block) return;
+
+    block.values = {};
+    block.updateType = value;
+
+    renderActionDetails();
+    generate();
+
+}
+function removePreference(id){
+
+    memberPreferences =
+        memberPreferences.filter(p => p.id !== id);
+
+    renderActionDetails();
+    generate();
+
+}
 function copiar(){
 
     navigator.clipboard.writeText(document.getElementById("nota").value);
@@ -2538,8 +3113,9 @@ function resetForm(){
 
     // Limpiar acciones
     selectedActions = [];
-
     expandedAction = null;
+    memberDemographics = [];
+    demographicCounter = 0;
 
     // Limpiar todos los inputs
     document.querySelectorAll("input").forEach(input=>{
@@ -2729,7 +3305,59 @@ if(field.showWhen){
     }
 
 }
+if(field.type==="multiDemographic"){
 
+    detailContainer.innerHTML += `
+        ${memberDemographics.length < 6 ? `
+<button
+    type="button"
+    class="copy"
+    onclick="addDemographicBlock()">
+    + Add Update
+</button>
+` : `
+<div class="max-updates">
+    ✓ Maximum of 6 updates reached
+</div>
+`}
+
+        <div id="memberDemographicBlocks"></div>
+    `;
+
+    renderDemographicBlocks();
+
+    return;
+}
+if(field.type==="multiPreference"){
+
+    detailContainer.innerHTML += `
+        ${memberPreferences.length < 7 ? `
+<button
+    type="button"
+    class="copy"
+    onclick="addPreferenceBlock()">
+    + Add Preference
+</button>
+` : `
+<div class="max-updates">
+    ✓ Maximum of 7 preference updates reached
+</div>
+`}
+
+        <div id="memberPreferenceBlocks"></div>
+    `;
+
+    renderPreferenceBlocks();
+
+    return;
+}
+
+if(
+    action.id==="updatememberpreferences" &&
+    field.id==="member_preferences_notes"
+){
+    return;
+}
             if(field.type==="textarea"){
 
                 detailContainer.innerHTML += `
