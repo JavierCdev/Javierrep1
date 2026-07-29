@@ -505,6 +505,13 @@ textarea{
     font-size:13px;
     font-weight:600;
 }
+.footer-credit .version{
+    display:block;
+    margin-top:4px;
+    text-align:center;
+    font-size:11px;
+    color:#94a3b8;
+}
 
 @keyframes heartbeat{
     0%{
@@ -737,6 +744,7 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
+    <small class="version">Ver. 1.3</small>
 </div>
 
 </div>
@@ -1062,7 +1070,7 @@ New Member Process intent was opened to assist the caller.
     ],
 
     note:`
-Provider Search Inquiry intent was opened to assist the caller with:
+Provider Search Inquiry intent was opened to assist the caller by providing information about providers.
 `,
 
     fields:[
@@ -1078,11 +1086,9 @@ Provider Search Inquiry intent was opened to assist the caller with:
         },
 
         {
-            id:"provider_results",
-            label:"Provider Search Results",
-            type:"textarea",
-            size:"large"
-        },
+    id:"provider_list",
+    type:"multiProvider"
+},
 
         {
             id:"provider_notes",
@@ -2348,6 +2354,8 @@ let memberDemographics = [];
 let demographicCounter = 0;
 let memberPreferences = [];
 let preferenceCounter = 0;
+let providers = [];
+let providerCounter = 0;
 
 function generate(){
 
@@ -2432,6 +2440,10 @@ if(action.id==="memberdemographics"){
 }else if(action.id==="updatememberpreferences"){
 
     text += generateMemberPreferences();
+
+}else if(action.id==="providersearchinq"){
+
+    text += generateProviders();
 
 }else if(action.fields){
 
@@ -2825,6 +2837,122 @@ function renderPreferenceBlocks(){
 
 }
 
+function renderProviderBlocks(){
+
+    const container = document.getElementById("providerBlocks");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    if(providers.length === 0){
+
+        container.innerHTML = `
+            <div class="empty-actions">
+                <div class="empty-title">
+                    No providers have been added.
+                </div>
+
+                <div class="empty-subtitle">
+                    Press <strong>+ Add Provider</strong>.
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    providers.forEach((provider,index)=>{
+
+        container.innerHTML += `
+
+<div class="action-detail-card">
+
+    <div class="action-detail-header">
+
+        <div class="action-detail-title">
+            Provider ${index+1}
+        </div>
+
+        <button
+            type="button"
+            class="remove-demographic"
+            onclick="removeProvider(${provider.id})">
+
+            🗑 Remove
+
+        </button>
+
+    </div>
+
+    <label class="detail-label">
+        Provider Name
+    </label>
+
+    <textarea
+        class="detail-textarea small"
+        oninput="
+            providers.find(p=>p.id===${provider.id}).values.name=this.value;
+            generate();
+        "
+    >${provider.values.name || ""}</textarea>
+
+    <label class="detail-label">
+        Address
+    </label>
+
+    <textarea
+        class="detail-textarea small"
+        oninput="
+            providers.find(p=>p.id===${provider.id}).values.address=this.value;
+            generate();
+        "
+    >${provider.values.address || ""}</textarea>
+
+    <label class="detail-label">
+        Phone Number
+    </label>
+
+    <textarea
+        class="detail-textarea small"
+        oninput="
+            providers.find(p=>p.id===${provider.id}).values.phone=this.value;
+            generate();
+        "
+    >${provider.values.phone || ""}</textarea>
+
+    <label class="detail-label">
+        Specialty
+    </label>
+
+    <textarea
+        class="detail-textarea small"
+        oninput="
+            providers.find(p=>p.id===${provider.id}).values.specialty=this.value;
+            generate();
+        "
+    >${provider.values.specialty || ""}</textarea>
+
+    <label class="detail-label">
+        NPI
+    </label>
+
+    <textarea
+        class="detail-textarea small"
+        oninput="
+            providers.find(p=>p.id===${provider.id}).values.npi=this.value;
+            generate();
+        "
+    >${provider.values.npi || ""}</textarea>
+
+</div>
+
+`;
+
+    });
+
+}
+
 function renderPreferenceField(field, block){
 
     const value = block.values[field.id] || "";
@@ -3017,6 +3145,48 @@ function generateMemberPreferences(){
 
 }
 
+function generateProviders(){
+
+    let text = "";
+
+    if(providers.length === 0){
+        return text;
+    }
+
+    text += "Provider Search Results:\n\n";
+
+    providers.forEach((provider,index)=>{
+
+        text += `Provider ${index + 1}\n`;
+
+        if(provider.values.name){
+            text += `Name: ${provider.values.name}\n`;
+        }
+
+        if(provider.values.address){
+            text += `Address: ${provider.values.address}\n`;
+        }
+
+        if(provider.values.phone){
+            text += `Phone Number: ${provider.values.phone}\n`;
+        }
+
+        if(provider.values.specialty){
+            text += `Specialty: ${provider.values.specialty}\n`;
+        }
+
+        if(provider.values.npi){
+            text += `NPI: ${provider.values.npi}\n`;
+        }
+
+        text += "\n";
+
+    });
+
+    return text;
+
+}
+
 function filterActions(){
 
     const search = document
@@ -3082,6 +3252,32 @@ function removePreference(id){
 
     memberPreferences =
         memberPreferences.filter(p => p.id !== id);
+
+    renderActionDetails();
+    generate();
+
+}
+function addProvider(){
+
+    if(providers.length >= 10){
+        return;
+    }
+
+    providerCounter++;
+
+    providers.push({
+        id:providerCounter,
+        values:{}
+    });
+
+    renderActionDetails();
+    generate();
+
+}
+
+function removeProvider(id){
+
+    providers = providers.filter(p=>p.id!==id);
 
     renderActionDetails();
     generate();
@@ -3348,6 +3544,23 @@ if(field.type==="multiPreference"){
     `;
 
     renderPreferenceBlocks();
+
+    return;
+}
+if(field.type==="multiProvider"){
+
+    detailContainer.innerHTML += `
+        <button
+            type="button"
+            class="copy"
+            onclick="addProvider()">
+            + Add Provider
+        </button>
+
+        <div id="providerBlocks"></div>
+    `;
+
+    renderProviderBlocks();
 
     return;
 }
