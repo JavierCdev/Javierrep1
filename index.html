@@ -754,7 +754,7 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
-    <small class="version">Ver. 1.4</small>
+    <small class="version">Ver. 1.4.1</small>
 </div>
 
 </div>
@@ -2470,7 +2470,22 @@ if(action.id==="memberdemographics"){
 
 }else if(action.id==="providersearchinq"){
 
+    // Address Reviewed
+    const addressReviewed = actionValues["provider_address_reviewed"] || "";
+
+    if(addressReviewed){
+        text += "Address Reviewed: " + addressReviewed + "\n";
+    }
+
+    // Provider Search Results
     text += generateProviders();
+
+    // Additional Notes
+    const providerNotes = actionValues["provider_notes"] || "";
+
+    if(providerNotes){
+        text += "Notes: " + providerNotes + "\n";
+    }
 
 }else if(action.fields){
 
@@ -3388,10 +3403,20 @@ function resetForm(){
     });
 
     // Limpiar acciones
-    selectedActions = [];
-    expandedAction = null;
-    memberDemographics = [];
-    demographicCounter = 0;
+selectedActions = [];
+expandedAction = null;
+
+// Limpiar Demographics
+memberDemographics = [];
+demographicCounter = 0;
+
+// Limpiar Preferences
+memberPreferences = [];
+preferenceCounter = 0;
+
+// Limpiar Providers
+providers = [];
+providerCounter = 0;
 
     // Limpiar todos los inputs
     document.querySelectorAll("input").forEach(input=>{
@@ -3628,7 +3653,6 @@ if(field.type==="multiPreference"){
     return;
 }
 if(field.type==="multiProvider"){
-
     detailContainer.innerHTML += `
         <button
             type="button"
@@ -3642,7 +3666,7 @@ if(field.type==="multiProvider"){
 
     renderProviderBlocks();
 
-    return;
+    // No hacer return aquí.
 }
 
 if(
