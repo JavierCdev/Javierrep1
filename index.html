@@ -2416,36 +2416,43 @@ const reason = document
 const male = document.getElementById("male").checked;
 const female = document.getElementById("female").checked;
 
-let pronoun = "";
+let pronoun = "they";
 
 if(male){
     pronoun = "he";
 }else if(female){
     pronoun = "she";
-}else{
-    pronoun = "they";
 }
 
-if(caller){
 
-    text += "Reason: Caller is calling us because " + pronoun + " would like to ";
+/* =========================
+   REASON
+========================= */
 
-    if(reason !== ""){
-        text += reason + ".\n";
+if(reason !== ""){
+
+    if(caller){
+
+        text += "Reason: Caller is calling us because "
+              + pronoun
+              + " would like to "
+              + reason
+              + ".\n";
+
+    }else if(member){
+
+        text += "Reason: Member is calling us because "
+              + pronoun
+              + " would like to "
+              + reason
+              + ".\n";
+
     }else{
-        text += ".\n";
-    }
 
-}
+        // No Caller/Member selected yet.
+        // Still generate the information entered.
+        text += "Reason: " + reason + ".\n";
 
-if(member){
-
-    text += "Reason: Member is calling us because " + pronoun + " would like to ";
-
-    if(reason !== ""){
-        text += reason + ".\n";
-    }else{
-        text += ".\n";
     }
 
 }
