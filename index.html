@@ -546,23 +546,7 @@ textarea{
 
 <h1>📝 Agent Support Tool</h1>
 
-<!-- CALLER / MEMBER -->
-<div class="section-title">👤 Type of Interaction</div>
-
-<div class="roles">
-
-<label>
-<input type="radio" name="interactionType" id="caller" onchange="generate()">
-Caller
-</label>
-
-<label>
-<input type="radio" name="interactionType" id="member" onchange="generate()">
-Member
-</label>
-
-</div>
-
+<!-- REASON FOR CALL -->
 <div class="section-title small-title">
     Reason for Call
 </div>
@@ -573,6 +557,56 @@ Member
     rows="3"
     placeholder="Describe briefly why the caller/member contacted us..."
     oninput="generate()"></textarea>
+
+
+<!-- CALLER / MEMBER -->
+<div class="section-title">👤 Type of Interaction</div>
+
+<div class="roles">
+
+<label>
+    <input type="radio"
+           name="interactionType"
+           id="caller"
+           onchange="generate()">
+    Caller
+</label>
+
+<label>
+    <input type="radio"
+           name="interactionType"
+           id="member"
+           onchange="generate()">
+    Member
+</label>
+
+</div>
+
+
+<!-- GENDER -->
+<div class="section-title">Gender</div>
+
+<div class="roles">
+
+<label>
+    <input type="radio"
+           name="gender"
+           id="male"
+           value="male"
+           onchange="generate()">
+    Male
+</label>
+
+<label>
+    <input type="radio"
+           name="gender"
+           id="female"
+           value="female"
+           onchange="generate()">
+    Female
+</label>
+
+</div>
 
 <!-- HIPAA -->
 <div class="section-title">🔐 HIPAA Verification</div>
@@ -754,7 +788,7 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
-    <small class="version">Ver. 1.4.1</small>
+    <small class="version">Ver. 1.4.2</small>
 </div>
 
 </div>
@@ -2371,34 +2405,47 @@ function generate(){
 
     let text = "";
 
-    let caller = document.getElementById("caller").checked;
-    let member = document.getElementById("member").checked;
+let caller = document.getElementById("caller").checked;
+let member = document.getElementById("member").checked;
 
-    const reason = document
+const reason = document
     .getElementById("reasonForCall")
     .value
     .trim();
 
+const male = document.getElementById("male").checked;
+const female = document.getElementById("female").checked;
+
+let pronoun = "";
+
+if(male){
+    pronoun = "he";
+}else if(female){
+    pronoun = "she";
+}else{
+    pronoun = "they";
+}
+
 if(caller){
 
-    text += "Reason: Caller is calling us due to ";
+    text += "Reason: Caller is calling us because " + pronoun + " would like to ";
 
     if(reason !== ""){
-
         text += reason + ".\n";
-
+    }else{
+        text += ".\n";
     }
 
 }
 
 if(member){
 
-    text += "Reason: Member is calling us due to ";
+    text += "Reason: Member is calling us because " + pronoun + " would like to ";
 
     if(reason !== ""){
-
         text += reason + ".\n";
-
+    }else{
+        text += ".\n";
     }
 
 }
