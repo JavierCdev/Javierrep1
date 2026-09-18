@@ -2401,6 +2401,94 @@ let preferenceCounter = 0;
 let providers = [];
 let providerCounter = 0;
 
+function buildReason(reason, interactionType, pronoun) {
+
+    const cleanReason = reason.trim();
+
+    if (!cleanReason) {
+        return "";
+    }
+
+    const lowerReason = cleanReason.toLowerCase();
+
+    /*
+        If the agent already entered a complete sentence,
+        do not add another grammatical structure.
+    */
+    const alreadyComplete = /^(he|she|they|caller|member)\b/i.test(cleanReason);
+
+    if (alreadyComplete) {
+        return "Reason: " + cleanReason.replace(/[.!?]+$/, "") + ".\n";
+    }
+
+    /*
+        Specific sentence patterns
+    */
+    if (lowerReason.startsWith("needs to ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} needs to ${cleanReason.substring(9).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("would like to ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} would like to ${cleanReason.substring(14).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("wants to ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} wants to ${cleanReason.substring(9).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("is requesting ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} is requesting ${cleanReason.substring(14).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("is looking for ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} is looking for ${cleanReason.substring(15).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("has questions about ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} has questions about ${cleanReason.substring(20).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("is asking about ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} is asking about ${cleanReason.substring(16).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    if (lowerReason.startsWith("needs ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} needs ${cleanReason.substring(6).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    /*
+        If the agent starts with "to ...",
+        interpret it as an action they would like to complete.
+    */
+    if (lowerReason.startsWith("to ")) {
+
+        return `Reason: ${interactionType} is calling us because ${pronoun} would like to ${cleanReason.substring(3).replace(/[.!?]+$/, "")}.\n`;
+
+    }
+
+    /*
+        Default:
+        Treat the entered information as an action/request.
+    */
+    return `Reason: ${interactionType} is calling us because ${pronoun} would like to ${cleanReason.replace(/[.!?]+$/, "")}.\n`;
+}
+
 function generate(){
 
     let text = "";
@@ -2424,6 +2512,14 @@ if(male){
     pronoun = "she";
 }
 
+let interactionType = "";
+
+if(caller){
+    interactionType = "Caller";
+}else if(member){
+    interactionType = "Member";
+}
+
 
 /* =========================
    REASON
@@ -2431,27 +2527,21 @@ if(male){
 
 if(reason !== ""){
 
-    if(caller){
+    if(interactionType !== ""){
 
-        text += "Reason: Caller is calling us because "
-              + pronoun
-              + " would like to "
-              + reason
-              + ".\n";
-
-    }else if(member){
-
-        text += "Reason: Member is calling us because "
-              + pronoun
-              + " would like to "
-              + reason
-              + ".\n";
+        text += buildReason(
+            reason,
+            interactionType,
+            pronoun
+        );
 
     }else{
 
-        // No Caller/Member selected yet.
-        // Still generate the information entered.
-        text += "Reason: " + reason + ".\n";
+        // Generate information even when
+        // Caller/Member has not been selected yet.
+        text += "Reason: " +
+                reason.replace(/[.!?]+$/, "") +
+                ".\n";
 
     }
 
