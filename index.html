@@ -536,6 +536,21 @@ textarea{
     }
     
 }
+.reason-error {
+    display: none;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.reason-error.show {
+    display: block;
+}
 
 </style>
 </head>
@@ -557,6 +572,7 @@ textarea{
     rows="3"
     placeholder="Describe briefly why the caller/member contacted us..."
     oninput="generate()"></textarea>
+    <div id="reasonError" class="reason-error"></div>
 
 
 <!-- CALLER / MEMBER -->
@@ -788,7 +804,7 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
-    <small class="version">Ver. 1.4.2</small>
+    <small class="version">Ver. 1.4.3</small>
 </div>
 
 </div>
@@ -2500,6 +2516,25 @@ const reason = document
     .getElementById("reasonForCall")
     .value
     .trim();
+    const reasonError = document.getElementById("reasonError");
+
+const reasonLetterCount = (
+    reason.match(/\p{L}/gu) || []
+).length;
+
+if(reason !== "" && reasonLetterCount < 10){
+
+    reasonError.textContent =
+        "⚠ Reason must contain at least 10 letters.";
+
+    reasonError.classList.add("show");
+
+}else{
+
+    reasonError.textContent = "";
+    reasonError.classList.remove("show");
+
+}
 
 const male = document.getElementById("male").checked;
 const female = document.getElementById("female").checked;
