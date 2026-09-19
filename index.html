@@ -919,7 +919,7 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
-    <small class="version">Ver. 1.4.4</small>
+    <small class="version">Ver. 1.4.5</small>
 </div>
 
 </div>
@@ -2149,7 +2149,14 @@ Accumulator Inquiry intent was opened to assist the caller.
     icon:"💳",
     name:"Benefits & Eligibility",
     favorite:true,
-    keywords:["b&e","benefits","eligibility","plan"],
+
+    keywords:[
+        "b&e",
+        "benefits",
+        "eligibility",
+        "plan"
+    ],
+
     note:`
 B&E intent was opened to get the plan information and assist the caller.
 
@@ -2157,44 +2164,97 @@ B&E intent was opened to get the plan information and assist the caller.
 
     fields:[
 
-    {
-    id:"be_active_verification",
-    label:"Is the member calling to verify the plan is active?",
-    type:"radio",
+        {
+            id:"be_active_verification",
+            label:"Is the member calling to verify the plan is active?",
+            type:"radio",
 
-    excludeFromNote:true,
+            excludeFromNote:true,
 
-    options:[
-        "Yes",
-        "No"
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"be_disclaimers",
+            label:"Disclaimers",
+            type:"textarea",
+            size:"large",
+
+            dependsOn:"be_active_verification",
+            showWhen:"Yes"
+        },
+
+        {
+            id:"be_tools",
+            label:"Tools Used",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"be_benefit_name",
+            label:"Benefit Name",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"be_authorization_required",
+            label:"Authorization Required",
+            type:"radio",
+
+            options:[
+                "Yes",
+                "No"
+            ]
+        },
+
+        {
+            id:"be_copayment",
+            label:"Copayment",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"be_coinsurance",
+            label:"Coinsurance",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"be_coverage",
+            label:"Coverage",
+            type:"textarea",
+            size:"medium"
+        },
+
+        {
+            id:"be_limit",
+            label:"Limit",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"be_vendor_name",
+            label:"Vendor Name",
+            type:"textarea",
+            size:"small"
+        },
+
+        {
+            id:"be_vendor_phone",
+            label:"Vendor Phone Number",
+            type:"textarea",
+            size:"small"
+        }
+
     ]
-},
-
-    {
-    id:"be_disclaimers",
-    label:"Disclaimers",
-    type:"textarea",
-    size:"large",
-
-    dependsOn:"be_active_verification",
-    showWhen:"Yes"
-},
-
-{
-    id:"be_tools",
-    label:"Tools Used",
-    type:"textarea",
-    size:"small"
-},
-
-{
-    id:"be_information",
-    label:"Information Quoted",
-    type:"textarea",
-    size:"large"
-}
-
-]
 },
 
 {
