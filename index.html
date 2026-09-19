@@ -551,7 +551,122 @@ textarea{
 .reason-error.show {
     display: block;
 }
+/* =========================
+   CUSTOM MODAL
+========================= */
 
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    padding: 20px;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 340px;
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+    animation: modalAppear .2s ease-out;
+}
+
+.modal-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    background: #eff6ff;
+}
+
+.modal-title {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.modal-message {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.modal-btn {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.modal-btn.cancel {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.modal-btn.cancel:hover {
+    background: #e2e8f0;
+}
+
+.modal-btn.confirm {
+    background: #f59e0b;
+    color: white;
+}
+
+.modal-btn.confirm:hover {
+    background: #d97706;
+}
+
+.modal-btn.close {
+    background: #2563eb;
+    color: white;
+}
+
+.modal-btn.close:hover {
+    background: #1d4ed8;
+}
+
+@keyframes modalAppear {
+
+    from {
+        opacity: 0;
+        transform: scale(.94) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+}
 </style>
 </head>
 
@@ -804,13 +919,52 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
-    <small class="version">Ver. 1.4.3</small>
+    <small class="version">Ver. 1.4.4</small>
 </div>
 
 </div>
 
 <!-- TOAST -->
 <div id="toast">📋 Copied</div>
+
+<!-- CUSTOM MODAL -->
+<div id="customModal" class="modal-overlay">
+
+    <div class="modal-box">
+
+        <div id="modalIcon" class="modal-icon">
+            ⚠️
+        </div>
+
+        <h2 id="modalTitle" class="modal-title">
+            Confirm Action
+        </h2>
+
+        <p id="modalMessage" class="modal-message">
+            Are you sure?
+        </p>
+
+        <div id="modalActions" class="modal-actions">
+
+            <button
+                id="modalCancel"
+                class="modal-btn cancel"
+                onclick="closeModal()">
+                Cancel
+            </button>
+
+            <button
+                id="modalConfirm"
+                class="modal-btn confirm"
+                onclick="confirmModalAction()">
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script>
 
@@ -2616,7 +2770,7 @@ if(reason !== ""){
 
   if(selectedActions.length){
 
-    text += "Actions:\n\n";
+    text += "Actions:\n";
 
     selectedActions.forEach(action=>{
 
@@ -3427,7 +3581,7 @@ function generateProviders(){
         return text;
     }
 
-    text += "Provider Search Results:\n\n";
+    text += "Provider Search Results:\n";
 
     providers.forEach((provider,index)=>{
 
@@ -3557,50 +3711,217 @@ function removeProvider(id){
     generate();
 
 }
+
+let modalAction = null;
+
+
+function openModal({
+    icon = "⚠️",
+    title = "Confirm Action",
+    message = "",
+    confirmText = "Confirm",
+    showCancel = true,
+    action = null
+}){
+
+    const modal = document.getElementById("customModal");
+
+    document.getElementById("modalIcon").textContent = icon;
+
+    document.getElementById("modalTitle").textContent = title;
+
+    document.getElementById("modalMessage").textContent = message;
+
+    const cancelButton =
+        document.getElementById("modalCancel");
+
+    const confirmButton =
+        document.getElementById("modalConfirm");
+
+    cancelButton.style.display =
+        showCancel ? "block" : "none";
+
+    confirmButton.textContent = confirmText;
+
+    modalAction = action;
+
+    modal.classList.add("show");
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById("customModal")
+        .classList.remove("show");
+
+    modalAction = null;
+}
+
+
+function confirmModalAction(){
+
+    const action = modalAction;
+
+    closeModal();
+
+    if(typeof action === "function"){
+        action();
+    }
+
+}
+
 function copiar(){
 
-    navigator.clipboard.writeText(document.getElementById("nota").value);
+    const reason = document
+        .getElementById("reasonForCall")
+        .value
+        .trim();
 
-    let toast = document.getElementById("toast");
-    toast.style.opacity = "1";
+    const reasonLetterCount = (
+        reason.match(/\p{L}/gu) || []
+    ).length;
 
-    setTimeout(() => {
-        toast.style.opacity = "0";
-    }, 1500);
+    const reasonError =
+        document.getElementById("reasonError");
+
+
+    /*
+        Reason validation
+    */
+
+    if(reasonLetterCount < 10){
+
+        reasonError.textContent =
+            "⚠ Reason must contain at least 10 letters.";
+
+        reasonError.classList.add("show");
+
+        document
+            .getElementById("reasonForCall")
+            .focus();
+
+        openModal({
+
+            icon: "⚠️",
+
+            title: "Unable to Copy",
+
+            message:
+                "The note cannot be copied because the Reason must contain at least 10 letters.",
+
+            confirmText: "Close",
+
+            showCancel: false
+
+        });
+
+        return;
+    }
+
+
+    /*
+        Copy note
+    */
+
+    navigator.clipboard
+        .writeText(
+            document.getElementById("nota").value
+        )
+        .then(() => {
+
+            let toast =
+                document.getElementById("toast");
+
+            toast.textContent = "📋 Copied";
+
+            toast.style.opacity = "1";
+
+            setTimeout(() => {
+
+                toast.style.opacity = "0";
+
+            }, 1500);
+
+        })
+        .catch(() => {
+
+            openModal({
+
+                icon: "⚠️",
+
+                title: "Unable to Copy",
+
+                message:
+                    "The note could not be copied to the clipboard. Please try again.",
+
+                confirmText: "Close",
+
+                showCancel: false
+
+            });
+
+        });
 
 }
 
 function resetForm(){
 
-    if(!confirm("Are you sure you want to reset the form?")){
-        return;
-    }
+    openModal({
+
+        icon: "🔄",
+
+        title: "Reset Form",
+
+        message:
+            "Are you sure you want to reset all information in this form?",
+
+        confirmText: "Reset",
+
+        showCancel: true,
+
+        action: performReset
+
+    });
+
+}
+
+
+function performReset(){
 
     // Vaciar todos los valores del motor
     Object.keys(actionValues).forEach(key=>{
         delete actionValues[key];
     });
 
+
     // Limpiar acciones
-selectedActions = [];
-expandedAction = null;
+    selectedActions = [];
+    expandedAction = null;
 
-// Limpiar Demographics
-memberDemographics = [];
-demographicCounter = 0;
 
-// Limpiar Preferences
-memberPreferences = [];
-preferenceCounter = 0;
+    // Limpiar Demographics
+    memberDemographics = [];
+    demographicCounter = 0;
 
-// Limpiar Providers
-providers = [];
-providerCounter = 0;
+
+    // Limpiar Preferences
+    memberPreferences = [];
+    preferenceCounter = 0;
+
+
+    // Limpiar Providers
+    providers = [];
+    providerCounter = 0;
+
 
     // Limpiar todos los inputs
     document.querySelectorAll("input").forEach(input=>{
 
-        if(input.type==="radio" || input.type==="checkbox"){
+        if(
+            input.type === "radio" ||
+            input.type === "checkbox"
+        ){
 
             input.checked = false;
 
@@ -3612,6 +3933,7 @@ providerCounter = 0;
 
     });
 
+
     // Limpiar todos los textarea
     document.querySelectorAll("textarea").forEach(textarea=>{
 
@@ -3619,12 +3941,14 @@ providerCounter = 0;
 
     });
 
+
     // Limpiar todos los select
     document.querySelectorAll("select").forEach(select=>{
 
         select.selectedIndex = 0;
 
     });
+
 
     // Ocultar Resolution Details
     const resolutionContainer =
@@ -3636,14 +3960,33 @@ providerCounter = 0;
 
     }
 
+
+    // Limpiar mensaje de error de Reason
+    const reasonError =
+        document.getElementById("reasonError");
+
+    if(reasonError){
+
+        reasonError.textContent = "";
+
+        reasonError.classList.remove("show");
+
+    }
+
+
     // Limpiar búsqueda
-    document.getElementById("searchResults").style.display="none";
-    document.getElementById("favoriteActions").style.display="grid";
+    document.getElementById("searchResults").style.display = "none";
+
+    document.getElementById("favoriteActions").style.display = "grid";
+
 
     // Volver a dibujar todo
     renderFavoriteActions();
+
     renderSelectedActions();
+
     renderActionDetails();
+
 
     generate();
 
