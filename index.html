@@ -393,6 +393,11 @@ textarea{
     font-size:13px;
     resize:vertical;
 }
+.detail-textarea.xsmall{
+    min-height:42px;
+    max-height:42px;
+    height:42px;
+}
 .detail-textarea.small{
     min-height:42px;
     max-height:42px;
@@ -407,7 +412,82 @@ textarea{
     min-height:130px;
     max-height:130px;
 }
+/* =========================B&E SECTION DIVIDERS========================= */
+.be-section-title{
+    margin-top:14px;
+    margin-bottom:8px;
+    padding:7px 10px;
+    background:#eef6ff;
+    border:1px solid #bfdbfe;
+    border-radius:7px;
+    color:#1e3a8a;
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+}
 
+.be-section-title.active{
+    margin-top:10px;
+}
+
+.be-section-title.benefits{
+    margin-top:14px;
+}
+.benefit-active-plan-grid{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+}
+
+.benefit-active-plan-grid .detail-textarea{
+    width:100%;
+    box-sizing:border-box;
+    margin-top:0;
+}
+
+.benefit-active-plan-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.benefit-active-plan-row .detail-textarea{
+    width:100%;
+    box-sizing:border-box;
+}
+.be-plan-status-group{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:8px;
+    width:100%;
+}
+/* =========================
+   BENEFITS & ELIGIBILITY
+   COMPACT FIELDS
+========================= */
+
+.benefit-compact-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+    margin-top:8px;
+}
+
+.benefit-compact-grid .detail-textarea{
+    width:100%;
+    box-sizing:border-box;
+    margin-top:0;
+}
+
+@media (max-width:360px){
+
+    .benefit-compact-grid{
+        grid-template-columns:1fr;
+    }
+
+}
 .detail-radio-group{
     display:grid;
     grid-template-columns:repeat(2,1fr);
@@ -919,7 +999,7 @@ Member
 </button>
 <div class="footer-credit">
     Made with <span class="heart">❤️</span> for <strong>JC Creations</strong>
-    <small class="version">Ver. 1.4.5</small>
+    <small class="version">Ver. 1.5.0</small>
 </div>
 
 </div>
@@ -2147,7 +2227,9 @@ Accumulator Inquiry intent was opened to assist the caller.
 {
     id:"benefitsEligibility",
     icon:"💳",
+
     name:"Benefits & Eligibility",
+
     favorite:true,
 
     keywords:[
@@ -2159,14 +2241,15 @@ Accumulator Inquiry intent was opened to assist the caller.
 
     note:`
 B&E intent was opened to get the plan information and assist the caller.
-
 `,
 
     fields:[
 
         {
             id:"be_active_verification",
+
             label:"Is the member calling to verify the plan is active?",
+
             type:"radio",
 
             excludeFromNote:true,
@@ -2176,16 +2259,77 @@ B&E intent was opened to get the plan information and assist the caller.
                 "No"
             ]
         },
+        {
+    id:"be_plan_status",
+
+    label:"Plan Status",
+
+    type:"radio",
+
+    excludeFromNote:true,
+
+    options:[
+        "Active",
+        "Term",
+        "Void"
+    ]
+},
+
+        /* =========================
+           ACTIVE PLAN INFORMATION
+        ========================= */
 
         {
-            id:"be_disclaimers",
-            label:"Disclaimers",
+            id:"be_active_member_name",
+            label:"Member Name",
             type:"textarea",
-            size:"large",
-
-            dependsOn:"be_active_verification",
-            showWhen:"Yes"
+            size:"small",
+            excludeFromNote:true
         },
+
+        {
+            id:"be_active_effective_date",
+            label:"Effective Date",
+            type:"textarea",
+            size:"xsmall",
+            excludeFromNote:true
+        },
+
+        {
+            id:"be_active_end_date",
+            label:"End Date",
+            type:"textarea",
+            size:"xsmall",
+            excludeFromNote:true
+        },
+
+        {
+            id:"be_active_plan_name",
+            label:"Plan Name",
+            type:"textarea",
+            size:"small",
+            excludeFromNote:true
+        },
+
+        {
+            id:"be_active_pcp",
+            label:"PCP",
+            type:"textarea",
+            size:"small",
+            excludeFromNote:true
+        },
+
+        {
+            id:"be_active_medical_group",
+            label:"Medical Group",
+            type:"textarea",
+            size:"small",
+            excludeFromNote:true
+        },
+
+        /* =========================
+           B&E DETAILS
+        ========================= */
 
         {
             id:"be_tools",
@@ -2198,60 +2342,74 @@ B&E intent was opened to get the plan information and assist the caller.
             id:"be_benefit_name",
             label:"Benefit Name",
             type:"textarea",
-            size:"small"
+            size:"small",
+            excludeFromNote:true
         },
 
         {
             id:"be_authorization_required",
             label:"Authorization Required",
             type:"radio",
-
             options:[
                 "Yes",
                 "No"
-            ]
+            ],
+            excludeFromNote:true
         },
 
         {
             id:"be_copayment",
             label:"Copayment",
             type:"textarea",
-            size:"small"
+            size:"small",
+            excludeFromNote:true
         },
 
         {
             id:"be_coinsurance",
             label:"Coinsurance",
             type:"textarea",
-            size:"small"
+            size:"small",
+            excludeFromNote:true
         },
 
         {
             id:"be_coverage",
             label:"Coverage",
             type:"textarea",
-            size:"medium"
+            size:"small",
+            excludeFromNote:true
         },
 
         {
             id:"be_limit",
             label:"Limit",
             type:"textarea",
-            size:"small"
+            size:"small",
+            excludeFromNote:true
         },
 
         {
             id:"be_vendor_name",
             label:"Vendor Name",
             type:"textarea",
-            size:"small"
+            size:"small",
+            excludeFromNote:true
         },
 
         {
             id:"be_vendor_phone",
             label:"Vendor Phone Number",
             type:"textarea",
-            size:"small"
+            size:"small",
+            excludeFromNote:true
+        },
+
+        {
+            id:"be_information",
+            label:"Additional Notes",
+            type:"textarea",
+            size:"large"
         }
 
     ]
@@ -2850,8 +3008,7 @@ if(reason !== ""){
 
         }
 
-    }
-
+    }    
 }
 if(action.id==="memberdemographics"){
 
@@ -2879,6 +3036,170 @@ if(action.id==="memberdemographics"){
     if(providerNotes){
         text += "Notes: " + providerNotes + "\n";
     }
+
+   }else if(action.id==="benefitsEligibility"){
+
+    /*
+        =========================
+        B&E - ACTIVE PLAN
+        =========================
+    */
+
+    const activeVerification =
+        actionValues["be_active_verification"] || "";
+
+    if(activeVerification){
+
+        const memberName =
+            (actionValues["be_active_member_name"] || "").trim();
+
+        const effectiveDate =
+            (actionValues["be_active_effective_date"] || "").trim();
+
+        const endDate =
+            (actionValues["be_active_end_date"] || "").trim();
+
+        const planName =
+            (actionValues["be_active_plan_name"] || "").trim();
+
+        const pcp =
+            (actionValues["be_active_pcp"] || "").trim();
+
+        const medicalGroup =
+            (actionValues["be_active_medical_group"] || "").trim();
+
+        const planStatus =
+            actionValues["be_plan_status"] || "";
+
+        /*
+            Si seleccionó Yes, generar el Disclaimer
+        */
+
+        if(activeVerification === "Yes"){
+
+            let activePlanText =
+                "Disclaimer: Our records indicate that " +
+                (memberName || "[Member Name]") +
+                " is currently " +
+                (planStatus || "Active") +
+                ".";
+
+            if(effectiveDate || endDate){
+
+                activePlanText +=
+                    " Effective date of " +
+                    (effectiveDate || "[Effective Date]") +
+                    " and end date of " +
+                    (endDate || "[End Date]") +
+                    ".";
+
+            }
+
+            if(planName){
+
+                activePlanText +=
+                    " under " +
+                    planName +
+                    ".";
+
+            }
+
+            if(pcp){
+
+                activePlanText +=
+                    " PCP is " +
+                    pcp;
+
+                if(medicalGroup){
+
+                    activePlanText +=
+                        " with " +
+                        medicalGroup;
+
+                }
+
+                activePlanText += ".";
+
+            }else if(medicalGroup){
+
+                activePlanText +=
+                    " Medical Group is " +
+                    medicalGroup +
+                    ".";
+
+            }
+
+            text += activePlanText + "\n";
+
+        }else{
+
+            /*
+                Si respondió No, registrar la respuesta
+            */
+
+            text +=
+                "Active Plan Verification: " +
+                activeVerification +
+                ".\n";
+
+        }
+
+    }
+
+
+    /*
+        =========================
+        B&E DETAILS
+        =========================
+
+        TODOS los campos capturados
+        deben aparecer en la nota.
+    */
+
+    const benefitFields = [
+
+        ["be_tools", "Tools Used"],
+
+        ["be_benefit_name", "Benefit Name"],
+
+        ["be_authorization_required", "Authorization Required"],
+
+        ["be_copayment", "Copayment"],
+
+        ["be_coinsurance", "Coinsurance"],
+
+        ["be_coverage", "Coverage"],
+
+        ["be_limit", "Limit"],
+
+        ["be_vendor_name", "Vendor Name"],
+
+        ["be_vendor_phone", "Vendor Phone Number"],
+
+        ["be_information", "Additional Notes"]
+
+    ];
+
+    benefitFields.forEach(([id, label])=>{
+
+        const value =
+            (actionValues[id] || "").trim();
+
+        if(value !== ""){
+
+            text +=
+                label +
+                ": " +
+                value +
+                "\n";
+
+        }
+
+    });
+
+}else if(action.fields){
+
+}else if(action.fields){
 
 }else if(action.fields){
 
@@ -4122,6 +4443,521 @@ function renderSelectedActions(){
     });
 
 }
+function renderBenefitsEligibilityDetails(detailContainer){
+
+    const getValue = id =>
+        actionValues[id] || "";
+
+    const setValue = (id, value) => {
+
+        actionValues[id] = value;
+
+        generate();
+
+    };
+
+       
+detailContainer.innerHTML += `
+
+    <div class="be-section-title active">
+        Active Plan Verification
+    </div>
+
+`;
+    /*
+        PLAN ACTIVE VERIFICATION
+    */
+
+    detailContainer.innerHTML += `
+
+        <label class="detail-label">
+
+            Is the member calling to verify the plan is active?
+
+        </label>
+
+        <div class="detail-radio-group">
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="be_active_verification"
+                    value="Yes"
+
+                    ${getValue("be_active_verification") === "Yes"
+                        ? "checked"
+                        : ""}
+
+                    onchange="
+                        actionValues['be_active_verification']=this.value;
+                        renderActionDetails();
+                        generate();
+                    "
+                >
+
+                Yes
+
+            </label>
+
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="be_active_verification"
+                    value="No"
+
+                    ${getValue("be_active_verification") === "No"
+                        ? "checked"
+                        : ""}
+
+                    onchange="
+                        actionValues['be_active_verification']=this.value;
+                        renderActionDetails();
+                        generate();
+                    "
+                >
+
+                No
+
+            </label>
+
+        </div>
+
+    `;
+
+    /*
+        ACTIVE PLAN INFORMATION
+    */
+
+    if(getValue("be_active_verification") === "Yes"){
+
+            /*
+        PLAN STATUS
+    */
+
+    if(getValue("be_active_verification") === "Yes"){
+
+        const planStatus =
+            getValue("be_plan_status") || "Active";
+
+        detailContainer.innerHTML += `
+
+            <label class="detail-label">
+
+                Plan Status
+
+            </label>
+
+            <div class="detail-radio-group be-plan-status-group">
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="be_plan_status"
+                        value="Active"
+
+                        ${planStatus === "Active"
+                            ? "checked"
+                            : ""}
+
+                        onchange="
+                            actionValues['be_plan_status']=this.value;
+                            generate();
+                        "
+                    >
+
+                    Active
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="be_plan_status"
+                        value="Term"
+
+                        ${planStatus === "Term"
+                            ? "checked"
+                            : ""}
+
+                        onchange="
+                            actionValues['be_plan_status']=this.value;
+                            generate();
+                        "
+                    >
+
+                    Term
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="be_plan_status"
+                        value="Void"
+
+                        ${planStatus === "Void"
+                            ? "checked"
+                            : ""}
+
+                        onchange="
+                            actionValues['be_plan_status']=this.value;
+                            generate();
+                        "
+                    >
+
+                    Void
+
+                </label>
+
+            </div>
+
+        `;
+
+    }
+
+        detailContainer.innerHTML += `
+
+            <div class="benefit-active-plan-grid">
+
+                <textarea
+                    id="be_active_member_name"
+                    class="detail-textarea small"
+                    placeholder="Member Name"
+                    oninput="
+                        actionValues['be_active_member_name']=this.value;
+                        generate();
+                    "
+                >${getValue("be_active_member_name")}</textarea>
+
+
+                <div class="benefit-active-plan-row">
+
+                    <textarea
+                        id="be_active_effective_date"
+                        class="detail-textarea xsmall"
+                        placeholder="Effective Date"
+                        oninput="
+                            actionValues['be_active_effective_date']=this.value;
+                            generate();
+                        "
+                    >${getValue("be_active_effective_date")}</textarea>
+
+
+                    <textarea
+                        id="be_active_end_date"
+                        class="detail-textarea xsmall"
+                        placeholder="End Date"
+                        oninput="
+                            actionValues['be_active_end_date']=this.value;
+                            generate();
+                        "
+                    >${getValue("be_active_end_date")}</textarea>
+
+                </div>
+
+
+                <textarea
+                    id="be_active_plan_name"
+                    class="detail-textarea small"
+                    placeholder="Plan Name"
+                    oninput="
+                        actionValues['be_active_plan_name']=this.value;
+                        generate();
+                    "
+                >${getValue("be_active_plan_name")}</textarea>
+
+
+                <textarea
+                    id="be_active_pcp"
+                    class="detail-textarea small"
+                    placeholder="PCP"
+                    oninput="
+                        actionValues['be_active_pcp']=this.value;
+                        generate();
+                    "
+                >${getValue("be_active_pcp")}</textarea>
+
+
+                <textarea
+                    id="be_active_medical_group"
+                    class="detail-textarea small"
+                    placeholder="Medical Group"
+                    oninput="
+                        actionValues['be_active_medical_group']=this.value;
+                        generate();
+                    "
+                >${getValue("be_active_medical_group")}</textarea>
+
+            </div>
+
+        `;
+
+    }
+
+    /*
+    BENEFIT INFORMATION
+*/
+
+detailContainer.innerHTML += `
+
+    <div class="be-section-title benefits">
+        Benefit Information
+    </div>
+
+`;
+
+    /*
+        TOOLS USED
+    */
+
+    detailContainer.innerHTML += `
+
+        <textarea
+
+            id="be_tools"
+
+            class="detail-textarea small"
+
+            placeholder="Tools Used"
+
+            oninput="
+                actionValues['be_tools']=this.value;
+                generate();
+            "
+
+        >${getValue("be_tools")}</textarea>
+
+    `;
+
+
+    /*
+        BENEFIT NAME
+    */
+
+    detailContainer.innerHTML += `
+
+        <textarea
+
+            id="be_benefit_name"
+
+            class="detail-textarea small"
+
+            placeholder="Benefit Name"
+
+            oninput="
+                actionValues['be_benefit_name']=this.value;
+                generate();
+            "
+
+        >${getValue("be_benefit_name")}</textarea>
+
+    `;
+
+
+    /*
+        AUTHORIZATION REQUIRED
+    */
+
+    detailContainer.innerHTML += `
+
+        <label class="detail-label">
+
+            Authorization Required
+
+        </label>
+
+        <div class="detail-radio-group">
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="be_authorization_required"
+                    value="Yes"
+
+                    ${getValue("be_authorization_required") === "Yes"
+                        ? "checked"
+                        : ""}
+
+                    onchange="
+                        actionValues['be_authorization_required']=this.value;
+                        generate();
+                    "
+                >
+
+                Yes
+
+            </label>
+
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="be_authorization_required"
+                    value="No"
+
+                    ${getValue("be_authorization_required") === "No"
+                        ? "checked"
+                        : ""}
+
+                    onchange="
+                        actionValues['be_authorization_required']=this.value;
+                        generate();
+                    "
+                >
+
+                No
+
+            </label>
+
+        </div>
+
+    `;
+
+
+    /*
+        COMPACT FIELDS
+    */
+
+    detailContainer.innerHTML += `
+
+        <div class="benefit-compact-grid">
+
+
+            <textarea
+
+                id="be_copayment"
+
+                class="detail-textarea small"
+
+                placeholder="Copayment"
+
+                oninput="
+                    actionValues['be_copayment']=this.value;
+                    generate();
+                "
+
+            >${getValue("be_copayment")}</textarea>
+
+
+            <textarea
+
+                id="be_coinsurance"
+
+                class="detail-textarea small"
+
+                placeholder="Coinsurance"
+
+                oninput="
+                    actionValues['be_coinsurance']=this.value;
+                    generate();
+                "
+
+            >${getValue("be_coinsurance")}</textarea>
+
+
+            <textarea
+
+                id="be_coverage"
+
+                class="detail-textarea small"
+
+                placeholder="Coverage"
+
+                oninput="
+                    actionValues['be_coverage']=this.value;
+                    generate();
+                "
+
+            >${getValue("be_coverage")}</textarea>
+
+
+            <textarea
+
+                id="be_limit"
+
+                class="detail-textarea small"
+
+                placeholder="Limit"
+
+                oninput="
+                    actionValues['be_limit']=this.value;
+                    generate();
+                "
+
+            >${getValue("be_limit")}</textarea>
+
+
+            <textarea
+
+                id="be_vendor_name"
+
+                class="detail-textarea small"
+
+                placeholder="Vendor Name"
+
+                oninput="
+                    actionValues['be_vendor_name']=this.value;
+                    generate();
+                "
+
+            >${getValue("be_vendor_name")}</textarea>
+
+
+            <textarea
+
+                id="be_vendor_phone"
+
+                class="detail-textarea small"
+
+                placeholder="Vendor Phone Number"
+
+                oninput="
+                    actionValues['be_vendor_phone']=this.value;
+                    generate();
+                "
+
+            >${getValue("be_vendor_phone")}</textarea>
+
+
+        </div>
+
+    `;
+
+
+    /*
+        ADDITIONAL NOTES
+    */
+
+    detailContainer.innerHTML += `
+
+        <textarea
+
+            id="be_information"
+
+            class="detail-textarea medium"
+
+            placeholder="Additional Notes"
+
+            oninput="
+                actionValues['be_information']=this.value;
+                generate();
+            "
+
+        >${getValue("be_information")}</textarea>
+
+    `;
+
+}
 function renderActionDetails(){
 
     const container = document.getElementById("actionDetails");
@@ -4164,6 +5000,14 @@ function renderActionDetails(){
 }
 
         if(!action.fields) return;
+
+        if(action.id === "benefitsEligibility"){
+
+    renderBenefitsEligibilityDetails(detailContainer);
+
+    return;
+
+}
 
         action.fields.forEach(field=>{
 
