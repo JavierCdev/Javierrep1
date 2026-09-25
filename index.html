@@ -3199,23 +3199,19 @@ if(action.id==="memberdemographics"){
 
 }else if(action.fields){
 
-}else if(action.fields){
-
-}else if(action.fields){
-
     action.fields.forEach(field=>{
 
         const value = actionValues[field.id] || "";
 
         if(value !== ""){
 
-    if(field.appendToNote) return;
+            if(field.appendToNote) return;
 
-    if(field.excludeFromNote) return;
+            if(field.excludeFromNote) return;
 
-    text += field.label + ": " + value + "\n";
+            text += field.label + ": " + value + "\n";
 
-}
+        }
 
     });
 
