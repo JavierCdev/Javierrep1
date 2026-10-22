@@ -2334,79 +2334,10 @@ B&E intent was opened to get the plan information and assist the caller.
             type:"textarea",
             size:"small"
         },
-
         {
-            id:"be_benefit_name",
-            label:"Benefit Name",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_authorization_required",
-            label:"Authorization Required",
-            type:"radio",
-            options:[
-                "Yes",
-                "No"
-            ],
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_copayment",
-            label:"Copayment",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_coinsurance",
-            label:"Coinsurance",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_coverage",
-            label:"Coverage",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_limit",
-            label:"Limit",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_vendor_name",
-            label:"Vendor Name",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_vendor_phone",
-            label:"Vendor Phone Number",
-            type:"textarea",
-            size:"small",
-            excludeFromNote:true
-        },
-
-        {
-            id:"be_information",
-            label:"Additional Notes",
-            type:"textarea",
-            size:"large"
+            id:"be_benefits",
+            label:"Benefits",
+            type:"multiBenefits"
         }
 
     ]
@@ -2470,8 +2401,13 @@ Claims Inquiry intent was opened to assist the caller
     fields:[
 
         {
+            id:"claims_record_group",
+            label:"Claims",
+            type:"multiClaims"
+        },
+        {
             id:"claims_inquiry_notes",
-            label:"Notes",
+            label:"Additional Notes",
             type:"textarea",
             size:"large"
         }
@@ -2642,6 +2578,11 @@ Medical Authorization Inquiry intent was opened to assist the caller
     fields:[
 
         {
+            id:"medical_auth_records",
+            label:"Authorizations",
+            type:"multiAuthorization"
+        },
+        {
             id:"medical_authentication_notes",
             label:"Notes",
             type:"textarea",
@@ -2676,6 +2617,11 @@ Pharmacy Authorization Inquiry intent was opened to assist the caller with:
 
     fields:[
 
+        {
+            id:"pharmacy_auth_records",
+            label:"Authorizations",
+            type:"multiAuthorization"
+        },
         {
             id:"pharmacy_auth_warm_transfer",
             label:"Member Was Warm Transferred to the Part D Team",
@@ -2779,12 +2725,166 @@ let selectedActions = [];
 let expandedAction = null;
 
 const actionValues = {};
+let claimsRecords = [];
+let medicalAuthorizationRecords = [];
+let pharmacyAuthorizationRecords = [];
+let benefitRecords = [];
+let recordIdCounter = 0;
 let memberDemographics = [];
 let demographicCounter = 0;
 let memberPreferences = [];
 let preferenceCounter = 0;
 let providers = [];
 let providerCounter = 0;
+
+const repeatedRecordConfigs = {
+    claims: {
+        title: "Claim",
+        fields: [
+            { key: "claimNumber", label: "Claim number" },
+            { key: "serviceFrom", label: "Service From", placeholder: "MM/DD/YYYY" },
+            { key: "serviceTo", label: "Service To", placeholder: "MM/DD/YYYY" },
+            { key: "providerName", label: "Provider Name" },
+            { key: "status", label: "Status", placeholder: "DENY / APPROVED / PENDING" },
+            { key: "amountBilled", label: "Amount Billed", placeholder: "$0.00" }
+        ]
+    },
+    medicalAuthorization: {
+        title: "Authorization",
+        fields: [
+            { key: "authorizationNumber", label: "Authorization number" },
+            { key: "serviceFrom", label: "Service From", placeholder: "MM/DD/YYYY" },
+            { key: "serviceTo", label: "Service To", placeholder: "MM/DD/YYYY" },
+            { key: "providerName", label: "Provider Name" },
+            { key: "status", label: "Status", placeholder: "DENY / APPROVED / PENDING" },
+            { key: "amountBilled", label: "Amount Billed", placeholder: "$0.00" }
+        ]
+    },
+    pharmacyAuthorization: {
+        title: "Authorization",
+        fields: [
+            { key: "authorizationNumber", label: "Authorization number" },
+            { key: "serviceFrom", label: "Service From", placeholder: "MM/DD/YYYY" },
+            { key: "serviceTo", label: "Service To", placeholder: "MM/DD/YYYY" },
+            { key: "providerName", label: "Provider Name" },
+            { key: "status", label: "Status", placeholder: "DENY / APPROVED / PENDING" },
+            { key: "amountBilled", label: "Amount Billed", placeholder: "$0.00" }
+        ]
+    },
+    benefits: {
+        title: "Benefit",
+        fields: [
+            { key: "benefitName", label: "Benefit Name" },
+            { key: "authorizationRequired", label: "Authorization Required", options: ["Yes", "No"] },
+            { key: "copayment", label: "Copayment" },
+            { key: "coinsurance", label: "Coinsurance" },
+            { key: "coverage", label: "Coverage" },
+            { key: "limit", label: "Limit" },
+            { key: "vendorName", label: "Vendor Name" },
+            { key: "vendorPhone", label: "Vendor Phone Number" },
+            { key: "additionalNotes", label: "Additional Notes", type: "textarea", size: "medium" }
+        ]
+    }
+};
+
+function getRepeatedRecords(kind){
+    if(kind === "claims") return claimsRecords;
+    if(kind === "medicalAuthorization") return medicalAuthorizationRecords;
+    if(kind === "pharmacyAuthorization") return pharmacyAuthorizationRecords;
+    if(kind === "benefits") return benefitRecords;
+    return [];
+}
+
+function createBlankRecord(kind){
+    const record = { id: ++recordIdCounter };
+    (repeatedRecordConfigs[kind]?.fields || []).forEach(field=>{
+        record[field.key] = "";
+    });
+    return record;
+}
+
+function escapeHTML(value){
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+function renderRepeatedRecords(kind, containerId){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+
+    const records = getRepeatedRecords(kind);
+    const config = repeatedRecordConfigs[kind];
+
+    if(!records.length){
+        container.innerHTML = "";
+        return;
+    }
+
+    container.innerHTML = records.map((record, index)=>`
+        <div class="action-detail-card">
+            <div class="action-detail-header">
+                <div class="action-detail-title">${config.title} ${index + 1}</div>
+                <button type="button" class="remove-demographic" aria-label="Delete ${config.title} ${index + 1}" title="Delete ${config.title} ${index + 1}" onclick="removeRepeatedRecord('${kind}', ${index})">🗑 Remove</button>
+            </div>
+            <div class="benefit-compact-grid">
+                ${config.fields.map(field=>{
+                    const current = escapeHTML(record[field.key]);
+                    const placeholder = escapeHTML(field.placeholder || field.label);
+                    if(field.type === "textarea"){
+                        return `<textarea class="detail-textarea ${field.size || "medium"}" style="grid-column:1 / -1; margin-top:0" aria-label="${escapeHTML(field.label)}" placeholder="${placeholder}" oninput="updateRepeatedRecord('${kind}', ${index}, '${field.key}', this.value)">${current}</textarea>`;
+                    }
+                    if(field.options){
+                        return `<select class="text-input" style="min-width:0" aria-label="${escapeHTML(field.label)}" onchange="updateRepeatedRecord('${kind}', ${index}, '${field.key}', this.value)">
+                            <option value="">${escapeHTML(field.label)}</option>
+                            ${field.options.map(option=>`<option value="${escapeHTML(option)}" ${record[field.key] === option ? "selected" : ""}>${escapeHTML(option)}</option>`).join("")}
+                        </select>`;
+                    }
+                    return `<input class="text-input" style="min-width:0" type="text" aria-label="${escapeHTML(field.label)}" placeholder="${placeholder}" value="${current}" oninput="updateRepeatedRecord('${kind}', ${index}, '${field.key}', this.value)">`;
+                }).join("")}
+            </div>
+        </div>
+    `).join("");
+}
+
+function addRepeatedRecord(kind){
+    const records = getRepeatedRecords(kind);
+    if(!repeatedRecordConfigs[kind]) return;
+    records.push(createBlankRecord(kind));
+    renderActionDetails();
+    generate();
+}
+
+function removeRepeatedRecord(kind, index){
+    const records = getRepeatedRecords(kind);
+    records.splice(index, 1);
+    renderActionDetails();
+    generate();
+}
+
+function updateRepeatedRecord(kind, index, field, value){
+    const record = getRepeatedRecords(kind)[index];
+    if(!record || !repeatedRecordConfigs[kind].fields.some(item=>item.key === field)) return;
+    record[field] = value;
+    generate();
+}
+
+function formatRepeatedRecordNotes(kind, heading){
+    const config = repeatedRecordConfigs[kind];
+    let recordNumber = 0;
+    return getRepeatedRecords(kind).map(record=>{
+        const lines = config.fields
+            .filter(field => String(record[field.key] || "").trim() !== "")
+            .map(field => `${field.label}: ${String(record[field.key]).trim()}`);
+        if(!lines.length) return "";
+        recordNumber += 1;
+        return `${heading} ${recordNumber}:\n${lines.join("\n")}\n`;
+    }).filter(Boolean).join("");
+}
 
 function buildReason(reason, interactionType, pronoun) {
 
@@ -3007,6 +3107,20 @@ if(reason !== ""){
 
     }    
 }
+if(action.id==="claimsinquiry"){
+
+    text += formatRepeatedRecordNotes("claims", "Claim");
+
+}else if(action.id==="medicalauthorizationinquiry"){
+
+    text += formatRepeatedRecordNotes("medicalAuthorization", "Authorization");
+
+}else if(action.id==="pharmacyauthorizationinquiry"){
+
+    text += formatRepeatedRecordNotes("pharmacyAuthorization", "Authorization");
+
+}
+
 if(action.id==="memberdemographics"){
 
     text += generateMemberDemographics();
@@ -3155,25 +3269,7 @@ if(action.id==="memberdemographics"){
 
     const benefitFields = [
 
-        ["be_tools", "Tools Used"],
-
-        ["be_benefit_name", "Benefit Name"],
-
-        ["be_authorization_required", "Authorization Required"],
-
-        ["be_copayment", "Copayment"],
-
-        ["be_coinsurance", "Coinsurance"],
-
-        ["be_coverage", "Coverage"],
-
-        ["be_limit", "Limit"],
-
-        ["be_vendor_name", "Vendor Name"],
-
-        ["be_vendor_phone", "Vendor Phone Number"],
-
-        ["be_information", "Additional Notes"]
+        ["be_tools", "Tools Used"]
 
     ];
 
@@ -3194,9 +3290,13 @@ if(action.id==="memberdemographics"){
 
     });
 
+    text += formatRepeatedRecordNotes("benefits", "Benefit");
+
 }else if(action.fields){
 
     action.fields.forEach(field=>{
+
+        if(field.type === "multiClaims" || field.type === "multiAuthorization" || field.type === "multiBenefits") return;
 
         const value = actionValues[field.id] || "";
 
@@ -4288,6 +4388,13 @@ function performReset(){
     providers = [];
     providerCounter = 0;
 
+    // Limpiar registros repetibles
+    claimsRecords = [];
+    medicalAuthorizationRecords = [];
+    pharmacyAuthorizationRecords = [];
+    benefitRecords = [];
+    recordIdCounter = 0;
+
 
     // Limpiar todos los inputs
     document.querySelectorAll("input").forEach(input=>{
@@ -4731,224 +4838,15 @@ detailContainer.innerHTML += `
     `;
 
 
-    /*
-        BENEFIT NAME
-    */
-
     detailContainer.innerHTML += `
-
-        <textarea
-
-            id="be_benefit_name"
-
-            class="detail-textarea small"
-
-            placeholder="Benefit Name"
-
-            oninput="
-                actionValues['be_benefit_name']=this.value;
-                generate();
-            "
-
-        >${getValue("be_benefit_name")}</textarea>
-
+        <button type="button" class="copy" onclick="addRepeatedRecord('benefits')">
+            + Add Benefit
+        </button>
+        <div id="benefitRecordsList"></div>
     `;
 
+    renderRepeatedRecords("benefits", "benefitRecordsList");
 
-    /*
-        AUTHORIZATION REQUIRED
-    */
-
-    detailContainer.innerHTML += `
-
-        <label class="detail-label">
-
-            Authorization Required
-
-        </label>
-
-        <div class="detail-radio-group">
-
-            <label>
-
-                <input
-                    type="radio"
-                    name="be_authorization_required"
-                    value="Yes"
-
-                    ${getValue("be_authorization_required") === "Yes"
-                        ? "checked"
-                        : ""}
-
-                    onchange="
-                        actionValues['be_authorization_required']=this.value;
-                        generate();
-                    "
-                >
-
-                Yes
-
-            </label>
-
-
-            <label>
-
-                <input
-                    type="radio"
-                    name="be_authorization_required"
-                    value="No"
-
-                    ${getValue("be_authorization_required") === "No"
-                        ? "checked"
-                        : ""}
-
-                    onchange="
-                        actionValues['be_authorization_required']=this.value;
-                        generate();
-                    "
-                >
-
-                No
-
-            </label>
-
-        </div>
-
-    `;
-
-
-    /*
-        COMPACT FIELDS
-    */
-
-    detailContainer.innerHTML += `
-
-        <div class="benefit-compact-grid">
-
-
-            <textarea
-
-                id="be_copayment"
-
-                class="detail-textarea small"
-
-                placeholder="Copayment"
-
-                oninput="
-                    actionValues['be_copayment']=this.value;
-                    generate();
-                "
-
-            >${getValue("be_copayment")}</textarea>
-
-
-            <textarea
-
-                id="be_coinsurance"
-
-                class="detail-textarea small"
-
-                placeholder="Coinsurance"
-
-                oninput="
-                    actionValues['be_coinsurance']=this.value;
-                    generate();
-                "
-
-            >${getValue("be_coinsurance")}</textarea>
-
-
-            <textarea
-
-                id="be_coverage"
-
-                class="detail-textarea small"
-
-                placeholder="Coverage"
-
-                oninput="
-                    actionValues['be_coverage']=this.value;
-                    generate();
-                "
-
-            >${getValue("be_coverage")}</textarea>
-
-
-            <textarea
-
-                id="be_limit"
-
-                class="detail-textarea small"
-
-                placeholder="Limit"
-
-                oninput="
-                    actionValues['be_limit']=this.value;
-                    generate();
-                "
-
-            >${getValue("be_limit")}</textarea>
-
-
-            <textarea
-
-                id="be_vendor_name"
-
-                class="detail-textarea small"
-
-                placeholder="Vendor Name"
-
-                oninput="
-                    actionValues['be_vendor_name']=this.value;
-                    generate();
-                "
-
-            >${getValue("be_vendor_name")}</textarea>
-
-
-            <textarea
-
-                id="be_vendor_phone"
-
-                class="detail-textarea small"
-
-                placeholder="Vendor Phone Number"
-
-                oninput="
-                    actionValues['be_vendor_phone']=this.value;
-                    generate();
-                "
-
-            >${getValue("be_vendor_phone")}</textarea>
-
-
-        </div>
-
-    `;
-
-
-    /*
-        ADDITIONAL NOTES
-    */
-
-    detailContainer.innerHTML += `
-
-        <textarea
-
-            id="be_information"
-
-            class="detail-textarea medium"
-
-            placeholder="Additional Notes"
-
-            oninput="
-                actionValues['be_information']=this.value;
-                generate();
-            "
-
-        >${getValue("be_information")}</textarea>
-
-    `;
 
 }
 function renderActionDetails(){
@@ -5087,6 +4985,42 @@ if(field.type==="multiProvider"){
 
     // No hacer return aquí.
 }
+if(field.type === "multiClaims"){
+    detailContainer.innerHTML += `
+        <button type="button" class="copy" onclick="addRepeatedRecord('claims')">
+            + Add Claim
+        </button>
+        <div id="claimsRecordsList"></div>
+    `;
+    renderRepeatedRecords("claims", "claimsRecordsList");
+    return;
+}
+if(field.type === "multiAuthorization"){
+    const kind = action.id === "medicalauthorizationinquiry"
+        ? "medicalAuthorization"
+        : "pharmacyAuthorization";
+    const containerId = action.id === "medicalauthorizationinquiry"
+        ? "medicalAuthorizationRecordsList"
+        : "pharmacyAuthorizationRecordsList";
+    detailContainer.innerHTML += `
+        <button type="button" class="copy" onclick="addRepeatedRecord('${kind}')">
+            + Add Authorization
+        </button>
+        <div id="${containerId}"></div>
+    `;
+    renderRepeatedRecords(kind, containerId);
+    return;
+}
+if(field.type === "multiBenefits"){
+    detailContainer.innerHTML += `
+        <button type="button" class="copy" onclick="addRepeatedRecord('benefits')">
+            + Add Benefit
+        </button>
+        <div id="benefitRecordsList"></div>
+    `;
+    renderRepeatedRecords("benefits", "benefitRecordsList");
+    return;
+}
 
 if(
     action.id==="updatememberpreferences" &&
@@ -5220,6 +5154,19 @@ function toggleAction(id){
 
     expandedAction = action.id;
 
+    if(action.id === "claimsinquiry" && !claimsRecords.length){
+        claimsRecords.push(createBlankRecord("claims"));
+    }
+    if(action.id === "medicalauthorizationinquiry" && !medicalAuthorizationRecords.length){
+        medicalAuthorizationRecords.push(createBlankRecord("medicalAuthorization"));
+    }
+    if(action.id === "pharmacyauthorizationinquiry" && !pharmacyAuthorizationRecords.length){
+        pharmacyAuthorizationRecords.push(createBlankRecord("pharmacyAuthorization"));
+    }
+    if(action.id === "benefitsEligibility" && !benefitRecords.length){
+        benefitRecords.push(createBlankRecord("benefits"));
+    }
+
 }else{
 
     selectedActions.splice(index,1);
@@ -5233,6 +5180,11 @@ function toggleAction(id){
     });
 
 }
+
+    if(action.id === "claimsinquiry") claimsRecords = [];
+    if(action.id === "medicalauthorizationinquiry") medicalAuthorizationRecords = [];
+    if(action.id === "pharmacyauthorizationinquiry") pharmacyAuthorizationRecords = [];
+    if(action.id === "benefitsEligibility") benefitRecords = [];
 
     if(expandedAction === action.id){
 
